@@ -1,0 +1,88 @@
+﻿nav {
+  height: 80px;
+  line-height: 80px;
+  background: white;
+  z-index: 4;
+  padding: 0 4.5% 0 4%;
+}
+img.logo {
+  height: 65px;
+  line-height: 80px;
+  margin-left: 30%;
+  margin-top: 6%;
+}
+nav a {
+  color: #013474;
+  display: inline-block;
+}
+#contentNav {
+  display: inline-block;
+  margin-left: 20%;
+  width: 80%;
+}
+#contentNav a {
+  margin: 0 3% 0;
+}
+#contentNav a p {
+  position: relative;
+}
+#contentNav a p:after {
+  content: "";
+  width: 100%;
+  height: 3px;
+  background: #cd1041;
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  opacity: 0;
+  -webkit-transition-duration: .3s;
+  -moz-transition-duration: .3s;
+  transition-duration: .3s;
+}
+div#lenguage {
+  position: absolute;
+  top: -20px;
+  right: 14.5%;
+  height: 5px;
+}
+#lenguage img {
+  width: 20px;
+}
+#navMobile {
+  display: none;
+}
+
+@media only screen and (min-width: 601px) {
+  nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+    height: 64px;
+    line-height: 64px;
+    }
+  .navbar-fixed {
+    height: 64px; } 
+    }
+
+
+nav .brand-logo {
+    position: absolute;
+    color: #fff;
+    display: inline-block;
+    font-size: 2.1rem;
+    padding: 0;
+}
+#contentNav a p:after {
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #cd1041;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    opacity: 0;
+    -webkit-transition-duration: .3s;
+    -moz-transition-duration: .3s;
+    transition-duration: .3s;
+}
+#contentNav a p:hover:after, #contentNav a p.active:after {
+    opacity: 1;
+    bottom: 20px;
+}

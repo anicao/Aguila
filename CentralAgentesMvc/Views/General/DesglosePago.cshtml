@@ -1,0 +1,203 @@
+﻿@model CentralAgentesMvc.Models.DesglosePagoModel
+@{
+    ViewBag.Title = "Desglose de Pagos";
+    var session = (System.Data.DataSet)Session["UserObj"];
+}
+<div>
+    @using (Html.BeginForm("UpdateDesglosePago", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmDesglosePago" }))
+    {        
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+              
+        <div class="well well-xs" style="margin: -10px -15px; padding: 5px;">
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Tipo de Pago:</strong></span>
+                <div class="form-validator">
+                    @Html.DropDownListFor(m => m.TipoPagoDesc, new SelectList(Model.TipoPagoSource, "strDesc", "strDesc"), new { @class = "form-control input-sm", @id = "ddlTipoP" })
+                </div>
+            </div>
+
+            <div id ="dv1" class="form-validator col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Nombre del Titular:</strong></span>
+                <div class="form-validator">
+                    @Html.TextBoxFor(m => m.cTitular, new { @class = "form-control input-sm uppercase", @placeholder = "Nombre del Titular", value = Model.cTitular, @id = "cTitular" })
+                    @Html.ValidationMessageFor(m => m.cTitular)
+                </div>
+            </div>
+            <div id ="dv2" class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Número de Tarjeta:</strong></span>
+                <div class="form-validator">
+                    @Html.TextBoxFor(m => m.cNoTarjeta, new { @class = "form-control input-sm ", @placeholder = "Número de TC", value = Model.cNoTarjeta, @id = "cNoTarjeta" })
+                    @Html.ValidationMessageFor(m => m.cNoTarjeta)
+                </div>
+                <span id="OkTC" class="btn btn-default input-sm input-group-addon" style="color: #FFFFFF;"></span>
+            </div>
+            <div id ="dv3" class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Banco:</strong></span>
+                <div class="form-validator">
+                    @Html.DropDownListFor(m => m.cBanco, new SelectList(Model.BancosSource, "strClave", "strDescrip", 1), new { @class = "form-control input-sm", id = "ddlBanco" })
+                    @Html.ValidationMessageFor(m => m.cBanco)
+                </div>
+            </div>
+            <div id ="dv4" class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Tipo de Tarjeta:</strong></span>
+                <div class="form-validator">
+                    @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+                    {
+                        <label class="radio-inline" style="margin-left: 10px">
+                            <input type="radio" name="TipoTC" id="TipoAEX" value="AEX" /><span class="fa fa-cc-amex fa-lg" title="American Express"></span>
+                        </label>
+                    }
+
+                    <label class="radio-inline" style="margin-left: 10px">
+                        <input type="radio" name="TipoTC" id="TipoVIS" value="VIS" /><span class="fa fa-cc-visa fa-lg" title="Visa"></span>
+                    </label>
+                    <label class="radio-inline" style="margin-left: 10px">
+                        <input type="radio" name="TipoTC" id="TipoMST" value="MST" /><span class="fa fa-cc-mastercard fa-lg" title="MasterCard"></span>
+                    </label>
+                </div>
+            </div>
+            <div id ="dv5" class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Vigencia (mes/año):</strong></span>
+                <div class="form-validator">
+                    @Html.DropDownListFor(m => m.VigenciaMonth, new SelectList(Model.Months, "Key", "Value", 1), new { @class = "form-control input-sm", @id="ddlVigMonth",  @style="width: 100px;" })
+                    @Html.DropDownListFor(m => m.VigenciaYear,  new SelectList(Model.Years, "Key", "Value", @DateTime.Now.Year), new { @class = "form-control input-sm", @id = "ddlVigYear", @style = "width: 100px;" })
+                </div>
+            </div>
+            <div id ="dv6" class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Código de Seguridad:</strong></span>
+                <div class="form-validator">
+                    @Html.TextBoxFor(m => m.cCodNegro, new { @class = "form-control input-sm", @maxlength = "4", @placeholder = "Código de Seguridad", value = Model.cCodNegro })
+                    @Html.ValidationMessageFor(m => m.cCodNegro)
+                </div>
+            </div>
+            @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+            {
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data"><strong>Monto pago inicial:</strong></span>
+                    <div class="form-validator">
+                        @Html.TextBoxFor(m => m.mMonto, new { @class = "form-control input-sm ", @placeholder = "Monto pago inicial", value = Model.mMonto })
+                        @Html.ValidationMessageFor(m => m.mMonto)
+                    </div>
+                </div>
+                <div id ="dv7" class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data"><strong>Monto recibos subsecuentes:</strong></span>
+                    <div class="form-validator">
+                        @Html.TextBoxFor(m => m.mMontoSig, new { @class = "form-control input-sm ", @placeholder = "Monto recibos subsecuentes", value = Model.mMontoSig })
+                        @Html.ValidationMessageFor(m => m.mMontoSig)
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(m => m.mMonto, new { value = Model.mMonto })
+                @Html.HiddenFor(m => m.mMontoSig, new { value = Model.mMontoSig })
+            }
+        </div>
+
+        @Html.HiddenFor(m => m.ID, new { value = Model.ID })
+        @Html.HiddenFor(m => m.indice, new { value = Model.indice })
+        @Html.HiddenFor(m => m.cTpoTarjeta, new { value = Model.cTpoTarjeta })
+        @Html.HiddenFor(m => m.dfVigtarjeta, new { value = Model.dfVigtarjeta })
+        @Html.HiddenFor(m => m.TipoPagoDesc, new { value = Model.TipoPagoDesc })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        SoloLetras("cTitular");
+
+        // Validación de campos numericos
+        ValidaNumero("cNoTarjeta");
+        ValidaNumero("cCodNegro");
+        ValidaNumero("mMonto");
+        ValidaNumero("mMontoSig");
+
+        // Capturar el radio buton seleccionado
+        $("input[name='TipoTC']").change(function () {
+            $('#cTpoTarjeta').val($("input[name='TipoTC']:checked").val())
+        });
+
+        $("#dfVigtarjeta").val($("#ddlVigMonth").val() + "/" + $("#ddlVigYear").val());
+
+        // Genero el vencimiento de la tarjeta
+        $('#ddlVigMonth').on("change", function () {
+            $("#dfVigtarjeta").val($("#ddlVigMonth").val() + "/" + $("#ddlVigYear").val());
+        });
+        $('#ddlVigYear').on("change", function () {
+            $("#dfVigtarjeta").val($("#ddlVigMonth").val() + "/" + $("#ddlVigYear").val());
+        });
+
+
+        // Para selecciona el Texto de los Input 
+        $("input").on('mouseup', function () { $(this).select(); });
+
+        // Llama al método para validar el nro de tarjeta
+        $('#cNoTarjeta').on("change", function () {
+            $.get('@Url.Action("ValidaTarjeta", "General")', { tarjeta: $("#cNoTarjeta").val() }, function (result) {
+                $("#OkTC").html(result);
+                SetRadioButton(result)
+            });
+        });
+
+        SetRadioButton = function (tipoTC) {
+            if ((tipoTC.toUpperCase().indexOf("VISA") > -1) || (tipoTC.toUpperCase().indexOf("VIS") > -1))
+                $('#TipoVIS').attr('checked', 'checked');
+
+            if ((tipoTC.toUpperCase().indexOf("MASTER") > -1) || (tipoTC.toUpperCase().indexOf("MST") > -1))
+                $('#TipoMST').attr('checked', 'checked');
+
+            if ((tipoTC.toUpperCase().indexOf("AMERICAN") > -1) || (tipoTC.toUpperCase().indexOf("AEX") > -1))
+                $('#TipoAEX').attr('checked', 'checked');
+
+            $('#cTpoTarjeta').val($("input[name='TipoTC']:checked").val())
+        }
+
+        // Marco el radio button
+        SetRadioButton('@Model.cTpoTarjeta');
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+
+        // Función para ocultar o mostrar los controles en función del tipo de pago
+        ShowControls = function (valor) {
+            $('#TipoPagoDesc').val(valor);
+
+            // Seteo el formulario en función del tipo de pago
+            switch (valor.toUpperCase()) {
+                case "EFECTIVO":
+                case "DEPOSITO":
+                    $('#cNoTarjeta').val("11111");
+                    $('#dfVigtarjeta').val("01/1900");
+                    $('#cCodNegro').val("999");
+                    $('#cTitular').val("XXXX");
+
+                    var hst = (valor.toUpperCase() == "EFECTIVO" ? 8 : 7);
+                    for (var i = 1; i < hst; i++) {
+                        $("#dv" + i.toString() + "").hide();
+                    }
+                    break;
+
+                case "TARJETA DE DEBITO":
+                    $('#cCodNegro').val("999");
+                    $("#dv6").hide();
+                    break;
+
+                case "COMBINADO":
+                    $("#ddlTipoP").prop('disabled', false);
+                    break;
+            }
+        }
+
+        // Llama al método para setear los controles
+        $('#ddlTipoP').on("change", function () {
+            ShowControls($("#ddlTipoP" + " option:selected")[0].innerHTML);
+        });
+
+        $("#ddlTipoP").prop('disabled', true);
+        ShowControls('@Model.TipoPagoDesc');
+    });
+</script>
+

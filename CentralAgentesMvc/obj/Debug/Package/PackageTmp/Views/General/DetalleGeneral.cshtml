@@ -1,0 +1,681 @@
+﻿@model CentralAgentesMvc.Models.GenericoViewModel
+
+@if (Model.dataExtraPoliza!=null) 
+{
+    if (Model.dataExtraPoliza.solicitudId > 0)
+    {
+        <div class="alert alert-success" role="alert" style="margin-top:-1%">
+        @Html.HiddenFor(m => m.dataExtraPoliza.statusFinal)
+        @Html.HiddenFor(m => m.dataExtraPoliza.segEstatus)
+        <div class="row">
+          <div class="col-md-4">Solicitud: @Html.ValueFor(m => m.dataExtraPoliza.solicitudId)</div>
+          <div class="col-md-4">
+            <span style="margin-left:50%; color:red">Pagos: @String.Format("{0:C}", Model.dataExtraPoliza.montoPagado) </span>
+            </div>
+          <div class="col-md-4">
+            <span class="pull-right">Poliza: @Html.ValueFor(m => m.dataExtraPoliza.polizaId)</span></div>
+        </div>
+
+  
+        </div>
+    }
+}
+<div class="row" style="margin: -5px -15px">
+	<div class="col-xs-4 column">
+		<div class="well well-xs" style="padding: 5px; margin: -10px">
+            <h5 style="text-align:left; margin-top: 2px;">Información general de la @ViewBag.SubTitle
+                <div style="float: right;">
+                    <button type="button"
+                            class="btn btn-xs btn-primary" 
+                            style="margin-right: 3px;" 
+                            title="Editar datos generales"
+                            onclick="ShowDataInfo('Editar Documento'
+                                                , '@Url.Action("DocumentoEnDB", "General")'
+                                                , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });">
+                            <span class="fa fa-pencil-square-o"></span>&nbsp;Editar
+                    </button>
+                </div>
+            </h5>
+            <hr style="margin-top: 4px; margin-bottom: 4px;" />
+            <div id="fsGeneral" style="height: 550px; overflow: auto; padding-right: 10px;" ondblclick="ShowDataInfo('Editar Documento'
+                                                                                                                    , '@Url.Action("DocumentoEnDB", "General")'
+                                                                                                                    , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });">
+                @{ Html.RenderAction("RefreshDetalleGeneral", "General"); }
+            </div>
+        </div>
+    </div>
+
+	<div class="col-xs-8 column">
+		<div class="well well-xs" style="padding: 5px; margin: -10px">
+            <h5 style="text-align:center; margin-top: 2px;">Datos de cálculo e información complementaria
+                <div class="form-inline" style="float: right;">                    
+                   <button id="BtnPagoAgentes"
+                           type="button"
+                           class="btn btn-xs btn-primary" 
+                           style="margin-right: 3px;"
+                           title="Pagar Cotización"
+                           disabled="disabled"
+                           onclick="ShowDataInfo('Pagar Cotización', '@Url.Action("PagoEnLineaExpress", "Cotizacion")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });">
+                        <span class="fa fa-money fa-md"></span>&nbsp;Pagar
+                    </button>
+                </div>
+            </h5>
+            <hr  style="margin-top: 4px; margin-bottom: 4px;" />
+            <div id="tabs" style="height: 550px;">
+                <ul class="nav nav-tabs" data-tabs="tabs" id="tabColor">
+                    <li class="active">   <a href="#tbVehiculos"    data-toggle="tab"><span class="fa fa-car"></span>&nbsp;Vehículos</a></li>
+                    <li>                  <a href="#tbConductores"  data-toggle="tab"><span class="fa fa-users"></span>&nbsp;Conductores</a></li>
+                    <li id="liComplement"><a href="#tbComplementos" data-toggle="tab"><span class="fa fa-book"></span>&nbsp;Datos Complementarios</a></li>
+                    <li id="liTracking">  <a href="#tbSeguimiento " data-toggle="tab"><span class="fa fa-clock-o"></span>&nbsp;Seguimiento</a></li>
+                    <li>                  <a href="#tbProspectos"   data-toggle="tab"><span class="fa fa-bookmark-o"></span>&nbsp;Prospectos</a></li>
+                    <li>                  <a href="#tbImporteCtz"   data-toggle="tab"><span class="fa fa-tasks"></span>&nbsp;Importe Cotización</a></li>
+                    <li>                  <a href="#tbFormaPagos"   data-toggle="tab"><span class="fa fa-money"></span>&nbsp;Formas de Pago</a></li>
+                    <li>                  <a href="#tbTarjetasP"    data-toggle="tab"><span class="fa fa-cubes"></span>&nbsp;Desglose de Pago</a></li>
+                </ul>
+
+                <div class="tab-content my-tab">
+                    <!-- Vehiculos -->
+                    <div class="tab-pane active" id="tbVehiculos">
+                        <div id="toolbarVehi">
+                            <div class="form-group" style="margin-bottom: 1px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Nuevo Vehículo'
+                                                            , '@Url.Action("CreateVehiculo", "General")'
+                                                            , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', vehiculoID: 0 });">
+                                    <span class="fa fa-car"></span>&nbsp;Nuevo Vehículo
+                                </button>
+                            </div>
+                        </div>
+                        <table id="tblVehiculos"
+                               data-height="460"
+                               data-striped="true"
+                               data-cache="false"
+                               data-resizable="true"
+                               data-classes="table table-hover table-bordered table-condensed miniText"
+                               data-show-refresh="true"
+                               data-show-toggle="true"
+                               data-show-columns="true"
+                               data-search="false"
+                               data-id-field='nNumVehi' 
+                               data-pagination="true"
+                               data-toolbar="#toolbarVehi">
+                            <thead class="headerTable">
+                                <tr>
+                                    <th data-field="nNumVehi"
+                                        data-sortable="false"
+                                        data-width="50"
+                                        data-align="center"
+                                        data-valign="middle"
+                                        data-formatter="vehiFormatter"
+                                        data-events="operateDTEvents">
+                                    </th>
+                                    <th data-field="codigoPostal"        data-width="80"  data-align="center" data-valign="middle">Código Postal</th>
+                                    <th data-field="DescripcionSubRamo"  data-width="150" data-align="center" data-valign="middle">Sub. Ramo</th>
+                                    <th data-field="DescripcionTipo"     data-width="350" data-align="left"   data-valign="middle">Tipo</th>
+                                    <th data-field="año"                 data-width="80"  data-align="center" data-valign="middle">Módelo</th>
+                                    
+                                    <th data-field="EstacionaEnCasa"     data-width="100" data-align="center" data-valign="middle" data-formatter="checkFormatter">Garage Casa</th>
+                                    <th data-field="EstacionaEnOfic"     data-width="100" data-align="center" data-valign="middle" data-formatter="checkFormatter">Garage Trabajo</th>
+                                    <th data-field="UsaParaTrabajo"      data-width="100" data-align="center" data-valign="middle" data-formatter="checkFormatter">Uso Trabajo</th>
+
+                                    <th data-field="deducDañMat"         data-width="110"  data-align="center" data-valign="middle">Deducible DM</th>
+                                    <th data-field="deducRobTot"         data-width="110"  data-align="center" data-valign="middle">Deducible RT</th>
+
+                                    <th data-field="coberGtoMed"         data-width="110" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Cobertura GM</th>
+                                    <th data-field="coberRepCiv"         data-width="110" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Cobertura RC</th>
+                                    <th data-field="coberRepCivCat"      data-width="110" data-align="right" data-valign="middle" data-formatter="moneyFormatter">RC Catastrófica</th>
+
+                                    <th data-field="UsaAsesoriaLegal"    data-width="110" data-align="center" data-valign="middle" data-formatter="checkFormatter">Ases. y defensa legal</th>
+
+                                    <th data-field="TieneSumaAsegFija"   data-width="110" data-align="center" data-valign="middle">Suma asegurada fija</th>
+                                    <th data-field="NombreConductorA"    data-width="350" data-align="center" data-valign="middle">Conductor</th>
+
+                                    <th data-field="sumaQqpoEsp"         data-width="110" data-align="right"  data-valign="middle" data-formatter="moneyFormatter">Valor Eqpo. Especial</th>
+                                    <th data-field="valorAuto"           data-width="110" data-align="right"  data-valign="middle" data-formatter="moneyFormatter">Valor Automovil</th>
+                                    <th data-field="tpoEspecifAuto"      data-width="300" data-align="center" data-valign="middle">Tipo y Descripción</th>
+                                    <th data-field="puertas"             data-width="80"  data-align="right"  data-valign="middle">Puertas</th>
+                                    <th data-field="cilindros"           data-width="80"  data-align="right"  data-valign="middle">Cilindros</th>
+
+                                    <th data-field="DescripTransmision"  data-width="110" data-align="center" data-valign="middle">Transmisión</th>
+                                    <th data-field="numeroSerie"         data-width="150" data-align="center" data-valign="middle">Serie</th>
+                                    <th data-field="placas"              data-width="90"  data-align="center" data-valign="middle">Placas</th>
+                                    <th data-field="ccNCI"               data-width="90"  data-align="center" data-valign="middle">NCI</th>
+                                    <th data-field="TieneSUVA"           data-width="90"  data-align="center" data-valign="middle"  data-formatter="checkFormatter">S.U.V.A.</th>
+                                    <th data-field="EsVehiculoSustituto" data-width="90"  data-align="center" data-valign="middle">Veh. Sust.</th>
+                                    <th data-field="cober100"            data-width="90"  data-align="center" data-valign="middle">Cobertura 100</th>
+                                    <th data-field="TieneTerssa"         data-width="90"  data-align="center" data-valign="middle" data-formatter="checkFormatter">TERSSA</th>
+                                    <th data-field="fecEBC"              data-width="150" data-align="center" data-valign="middle">Guia EBC</th>
+                                    <th data-field="pagEBC"              data-width="90"  data-align="center" data-valign="middle">Página</th>
+
+                                    <th data-field="TipoAsistenciaViaje" data-width="200" data-align="center" data-valign="middle">Asistencia En Viaje</th>
+                                    <th data-field="VIN"                 data-width="150"  data-align="center" data-valign="middle">VIN</th>
+                                    <th data-field="ExcenDedu"           data-width="90"  data-align="center" data-valign="middle">Exención de Deducible</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <!-- Conductores -->
+                    <div class="tab-pane" id="tbConductores">
+                        <div id="toolbarCond">
+                            <div class="form-group" style="margin-bottom: 1px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Nuevo Conductor'
+                                                            , '@Url.Action("CreateConductor", "General")'
+                                                            , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', conductorID: 0 });">
+                                    <span class="fa fa-users"></span>&nbsp;Nuevo Conductor
+                                </button>
+                            </div>
+                        </div>
+                        <table id="tblConductores"
+                               data-height="380"
+                               data-striped="true"
+                               data-cache="false"
+                               data-resizable="true"
+                               data-classes="table table-hover table-bordered table-condensed miniText"
+                               data-show-refresh="true"
+                               data-show-toggle="true"
+                               data-show-columns="true"
+                               data-search="false"
+                               data-id-field='nNumCond' 
+                               data-pagination="true"
+                               data-toolbar="#toolbarCond">
+                            <thead>
+                                <tr>
+                                    <th data-field="nNumCond"
+                                        data-sortable="false"
+                                        data-width="40"
+                                        data-align="center"
+                                        data-valign="middle"
+                                        data-formatter="condFormatter"
+                                        data-events="operateDTEvents">
+                                    </th>
+                                    <th data-field="nombre"                 data-width="240" data-align="center" data-valign="middle">Nombre del Conductor</th>
+                                    <th data-field="fechaNacimiento"        data-width="120" data-align="center" data-valign="middle">Fecha de Nacimiento</th>
+                                    <th data-field="DescripcionSexo"        data-width="50"  data-align="center" data-valign="middle">Sexo</th>
+                                    <th data-field="DescripcionEdoCivil"    data-width="75"  data-align="center" data-valign="middle">Estado Civil</th>
+                                    <th data-field="DescripcionExRespCivil" data-width="90"  data-align="center" data-valign="middle">Extensión de R.C</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <!-- Complementos -->
+                    <div class="tab-pane" id="tbComplementos">
+                        <div id="toolbarComp">
+                            <div class="form-group" style="margin-top:3px; margin-bottom: 3px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Modificar Complemento'
+                                                            , '@Url.Action("ComplementoEnDocumento", "General")'
+                                                            , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });">
+                                    <span class="fa fa-book"></span>&nbsp;Modificar Complemento
+                                </button>
+                            </div>
+                        </div>
+                        <div id="dvRefrescable">
+                            @{ Html.RenderAction("RefreshComplement", "General"); }
+                        </div>
+                    </div>
+
+                    <!-- Seguimiento -->
+                    <div class="tab-pane" id="tbSeguimiento">
+                        <div id="toolbarSeg">
+                            <div class="form-group" style="margin-top:3px; margin-bottom: 3px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Modificar Seguimiento'
+                                                            , '@Url.Action("SeguimientoEnDocumento", "General")'
+                                                            , { id: $('#poliza').val(), modulo: '@ViewBag.Modulo' });">
+                                    <span class="fa fa-clock-o"></span>&nbsp;Modificar Seguimiento
+                                </button>
+                            </div>
+                        </div>
+                        <div id="dvRefreshTracking">
+                            @{ Html.RenderAction("RefreshTracking", "General"); }
+                        </div>
+                    </div>
+
+                    <!-- Prospectos -->
+                    <div class="tab-pane" id="tbProspectos">
+                        <div id="toolbarPros">
+                            <div class="form-group" style="margin-bottom: 1px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Nuevo Prospecto'
+                                                            , '@Url.Action("ProspectoEnDocumento", "General")'
+                                                            , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', prospectID: 0 });">
+                                    <span class="fa fa-bookmark-o"></span>&nbsp;Nuevo Prospecto
+                                </button>
+                            </div>
+                        </div>
+                        <table id="tblProspectos"
+                               data-height="380"
+                               data-striped="true"
+                               data-cache="false"
+                               data-resizable="true"
+                               data-classes="table table-hover table-bordered table-condensed miniText"
+                               data-show-refresh="true"
+                               data-show-toggle="true"
+                               data-show-columns="true"
+                               data-search="false"
+                               data-id-field='nconsePros'
+                               data-pagination="true"
+                               data-toolbar="#toolbarPros">
+                            <thead>
+                                <tr>
+                                    <th data-field="nconsePros"
+                                        data-sortable="false"
+                                        data-width="45"
+                                        data-align="center"
+                                        data-valign="middle"
+                                        data-formatter="prosFormatter"
+                                        data-events="operateDTEvents">
+                                    </th>
+                                    <th data-field="TipoModelo"      data-width="200" data-align="center" data-valign="middle">Automovil(tipo y modelo)</th>
+                                    <th data-field="Compañia"        data-width="200" data-align="center" data-valign="middle">Compañia Aseguradora</th>
+                                    <th data-field="TerminoVigencia" data-width="90"  data-align="center" data-valign="middle" data-formatter="dateFormatter">Termino de Vigencia</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <!-- Importe de la Cotización -->
+                    <div class="tab-pane" id="tbImporteCtz">
+                        <div id="dvRefreshCalculo">
+                            @{ Html.RenderAction("CalculoCotizacion", "Cotizacion", new { ejecutaCalculo = false }); }
+                        </div>
+                    </div>
+
+                    <!-- Formas de Pago -->
+                    <div class="tab-pane" id="tbFormaPagos">
+                        <table id="tblFormasPago"
+                               data-height="480"
+                               data-striped="true"
+                               data-cache="false"
+                               data-show-header="true"
+                               data-classes="table table-hover table-bordered table-condensed smallText">
+                            <thead>
+                                <tr>
+                                    <th data-field="DescripcionRubro" data-width="350" data-align="left"  data-valign="middle"></th>
+                                    <th data-field="PagoContado"      data-width="80"  data-align="right" data-valign="middle">Contado</th>
+                                    <th data-field="PagoSemestral"    data-width="80"  data-align="right" data-valign="middle">Semestral</th>
+                                    <th data-field="PagoTrimestral"   data-width="80"  data-align="right" data-valign="middle">Trimestral</th>
+                                    <th data-field="PagoMensual"      data-width="80"  data-align="right" data-valign="middle">Mensual</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <!-- Desglose de Pagos -->
+                    <div class="tab-pane" id="tbTarjetasP">
+                        <div id="toolbarDP">
+                            <div class="form-group" style="margin-bottom: 1px;">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="ShowDataInfo('Desglose de Pagos'
+                                                            , '@Url.Action("CreateDesglosePago", "General")'
+                                                            , { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', pagoID: 0 });">
+                                    <span class="fa fa-cubes"></span>&nbsp;Nuevo Pago
+                                </button>
+                            </div>
+                        </div>
+                        <table id="tblTarjetasP"
+                               data-height="460"
+                               data-striped="true"
+                               data-cache="false"
+                               data-resizable="true"
+                               data-classes="table table-hover table-bordered table-condensed miniText"
+                               data-show-refresh="true"
+                               data-show-toggle="true"
+                               data-show-columns="true"
+                               data-search="false"
+                               data-id-field='ID' 
+                               data-pagination="true"
+                               data-toolbar="#toolbarDP">
+                            <thead>
+                                <tr>
+                                    <th data-field="ID"
+                                        data-sortable="false"
+                                        data-width="50"
+                                        data-align="center"
+                                        data-valign="middle"
+                                        data-formatter="dpFormatter"
+                                        data-events="operateDTEvents">
+                                    </th>
+                                    <th data-field="TipoPagoDesc" data-width="120"  data-align="center" data-valign="middle">Tipo de Pago</th>
+                                    <th data-field="cTpoTarjeta"  data-width="110"  data-align="center" data-valign="middle">Tipo de Tarjeta</th>
+                                    <th data-field="cBancoDesc"   data-width="300" data-align="left"   data-valign="middle">Banco</th>
+                                    <th data-field="mMonto"       data-width="80"  data-align="right"  data-valign="middle" data-formatter="moneyFormatter">Monto</th>
+                                    <th data-field="mMontoSig"    data-width="80"  data-align="right"  data-valign="middle" data-formatter="moneyFormatter">Monto Siguiente</th>
+                                    <th data-field="cNoTarjeta"   data-width="200" data-align="center" data-valign="middle" data-formatter="tcFormatter">No. Tarjeta</th>
+                                    <th data-field="dfVigtarjeta" data-width="80"  data-align="center" data-valign="middle" data-formatter="vgFormatter">Vigencia</th>
+                                    <th data-field="cTitular"     data-width="200" data-align="left"   data-valign="middle">Titular de la Tarjeta</th>
+                                    <th data-field="cCodNegro"    data-width="100" data-align="center" data-valign="middle" data-formatter="blackFormatter">Código Negro</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="totalColumn">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: right"><strong>TOTAL PAGOS: </strong></td>
+                                    <td style="text-align: right"></td>
+                                    <td style="text-align: right"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<input type="hidden" id="Imprimir" />
+    <!-- Popover Comisión hidden content -->
+    <div id="popoverComision" style="display: none;">
+        <div class="row" style="padding: 5px 10px 10px 15px;">
+        <div class="form-group">
+            @Html.Label("Porcentaje:", new { @class = "col-sm-6 control-label-sm" })
+            <div class="col-sm-6">
+                @Html.DropDownListFor(m => m.porcentajecomision, new SelectList(Model.PorcentajeComisionSource, "Key", "Value", 0), new { @class = "form-control input-sm" })
+               
+            </div>
+        </div> 
+        </div>
+    </div>
+</div>
+ @if(Model.ObjCalculo!=null)
+       {
+<script type="text/javascript">
+   $(document).ready(function () {
+             PrintRenovacion = function (recordID) {
+
+            //Antes de Imprimir Verificar que este guardada la Cotización
+            if (recordID == 0)
+            {
+                var message = "Antes de Imprimir la Cotización necesita ser Guardada";
+                if (message.length > 0)
+                {
+                    $('#dvBodyInfoCot').html("<div><ul>" + message + "</ul></div>");
+                    $('#dvWinInfoCot').show();
+                }
+                return;
+            }
+
+            // Ejecuto el calculo para tener los valores mas actualizados
+          $.get(window.jsUrls.Cotizar, {ejecutaCalculo: true}, function (msg) {   
+                $("#dvRefreshCalculo").html(msg);
+
+                // Refrescar el grid de Desglose por Vehiculo
+                RefreshDetalleTables('tblDesglosePago', 'RefreshCalculoVehiculos', 'Cotizacion');
+
+                // Refrescar la pestaña de formas de pago
+                RefreshDetalleTables('tblFormasPago', 'RefreshCalculoFormasPagos', 'Cotizacion');
+
+                var line1 = "1 Pago de: " + $('#mPago1de').val();
+                var line2 = ($('#mPago2de').val() == "$0.00" ? "" :  $('#spTtlDsc2').html() + " " + $('#mPago2de').val());
+                var tPago = ($('#FormaPago').val() == "Anual/Unico" ? $('#TipoPago').val() : "");
+                var url   = '@Url.Content("~/AspNetForms/ReportViewer.aspx")' 
+                                                + "?REPORT=SOLRENOVACION&PLZ=" + recordID 
+                                                + "&SOr=" + 'R'
+                                                + "&SERA=" + '@Model.cEra'
+                                                + "&STP=" + '@Model.tipoPago'
+                                                + "&MP1=" + '@Model.ObjCalculo.mPago1de'
+                                                + "&MP2=" + '@Model.ObjCalculo.mPago2de'
+                                                + "&SEJC=" + '@Model.responsable'
+                                                + "&S6M=" + '@Model.nPromocion'
+                                                + "&SFP=" + '@Model.formaPago'
+                                                + "&SSOL=" + '@Model.solicitudID'
+                                                + "&SKT=" + '@Model.kit'
+                                                + "&SKT=" + '@Model.kit'
+                                                + "&SP1=" + '@Model.ObjCalculo.nPago1de'
+                                                + "&SP2=" + '@Model.ObjCalculo.nPago2de';
+                window.open(url, "rptCtz", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+            });
+        }
+    });
+        </script>
+        }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Imprimir').val("true")
+        $("#fsGeneral").niceScroll({cursorcolor:"#446e9b"});
+        $("#fsGeneral").mouseover(function () {
+                            $(this).getNiceScroll().show();
+                            $(this).getNiceScroll().resize();
+                       })
+                       .mouseout(function () {
+                            $(this).getNiceScroll().hide();
+                       });
+
+        if ('@Model.ModulodeTrabajo' == "Cotizaciones")
+            $("#liTracking").hide();
+        else
+            $("#liComplement").hide();
+
+        // Formateo de la columnas
+        vehiFormatter = function (value, row, index) {
+            return [
+                '<a class="revVeh" href="javascript:void(0)" title="Revisar información"><i class="fa fa-car fa-lg"></i></a>&nbsp;',
+                '<a class="delVeh" href="javascript:void(0)" title="Eliminar vehículo"><i class="fa fa-trash-o fa-lg"></i></a>',
+                ].join('');
+        };
+        condFormatter = function (value, row, index) {
+            return [
+                '<a class="revCon" href="javascript:void(0)" title="Revisar información"><i class="fa fa-users fa-lg"></i></a>&nbsp;',
+                '<a class="delCon" href="javascript:void(0)" title="Eliminar conductor"><i class="fa fa-trash-o fa-lg"></i></a>',
+                ].join('');
+        };
+        prosFormatter = function (value, row, index) {
+            return [
+                '<a class="revPro" href="javascript:void(0)" title="Revisar información"><i class="fa fa-bookmark-o fa-lg"></i></a>&nbsp',
+                '<a class="delPro" href="javascript:void(0)" title="Eliminar prospecto"><i class="fa fa-trash-o fa-lg"></i></a>',
+                ].join('');
+        };
+        dpFormatter = function (value, row, index) {
+            return [
+                '<a class="revDP" href="javascript:void(0)" title="Revisar información"><i class="fa fa-cubes fa-lg"></i></a>&nbsp;',
+                '<a class="delDP" href="javascript:void(0)" title="Eliminar pago"><i class="fa fa-trash-o fa-lg"></i></a>',
+                ].join('');
+        };
+
+        // Eventos disparados en el click de las imagenes
+        window.operateDTEvents = {
+            // Vehiculos
+            'click .delVeh': function (e, value, row, index) {
+                var msje = "¿ Desea eliminar el vehículo: " + row.DescripcionTipo + " ?"
+                DeleteObject("Vehículos", msje, "fa fa-car fa-lg", '@Url.Action("EliminarVehiculo", "General")', { vehiculoID: value }, { Control: 'tblVehiculos', Action: 'RefreshCars' });
+            },
+            'click .revVeh': function (e, value, row, index) {
+                ShowDataInfo('Editar Vehículo', '@Url.Action("VehiculoEnDocumento", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', vehiculoID: value });
+            },
+            // Conductores
+            'click .delCon': function (e, value, row, index) {
+                var msje = "¿ Desea eliminar el conductor: " + row.nombre + " ?"
+                DeleteObject("Conductores", msje, "fa fa-users fa-lg", '@Url.Action("EliminarConductor", "General")', { conductorID: value }, { Control: 'tblConductores', Action: 'RefreshDrivers' });
+            },
+            'click .revCon': function (e, value, row, index) {
+                ShowDataInfo('Editar Conductor', '@Url.Action("ConductorEnDocumento", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', conductorID: value });
+            },
+            // Prospectos
+            'click .delPro': function (e, value, row, index) {
+                var msje = "¿ Desea eliminar el prospecto: " + row.TipoModelo + " ?"
+                DeleteObject("Prospectos", msje, "fa fa-bookmark-o fa-lg", '@Url.Action("EliminarProspecto", "General")', { prospectID: value }, { Control: 'tblProspectos', Action: 'RefreshProspects' });
+            },
+            'click .revPro': function (e, value, row, index) {
+                ShowDataInfo('Editar Prospecto', '@Url.Action("ProspectoEnDocumento", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo', prospectID: value });
+            },
+            // Desglose de Pagos
+            'click .delDP': function (e, value, row, index) {
+                var msje = "¿ Desea eliminar el pago: " + row.TipoPagoDesc + " - " + row.cTpoTarjeta + " - por " + moneyFormatter(row.mMonto) + " ?"
+                DeleteObject("Desglose de Pagos"
+                           , msje
+                           , "fa fa-cubes fa-lg"
+                           , '@Url.Action("EliminarPago", "General")'
+                           , { tipoPago: row.TipoPagoDesc, pagoID: value }
+                           , { Control: 'tblTarjetasP', Action: 'RefreshDesglosePagos' });
+            },
+            'click .revDP': function (e, value, row, index) {
+                ShowDataInfo('Editar Desglose de Pagos', '@Url.Action("DesglosePagoEnDocumento", "General")', { tipoPago: row.TipoPagoDesc, pagoID: value });
+            }
+        };
+
+        // Funcion para refrescar los datos de las tablas
+        RefreshDetalleTables = function(tableName, accionName, controllerName) {        
+            $('#CedeComision').show();        
+            $.get(window.jsUrls.RefViewDG, function (result) { $("#fsGeneral").html(result); });
+            var jsUrl = '@Url.Action("REFRESH", "General")'.replace('REFRESH', accionName);
+            if (controllerName != undefined)
+                jsUrl = jsUrl.replace('General', controllerName);
+
+            $('#'+ tableName + '').bootstrapTable('refresh', { url: jsUrl });
+
+            if (tableName == 'tblTarjetasP'){
+                setTimeout(TotalizaPagos, 4000);
+            }
+        };
+
+        // Función para imprimir la cotización
+        PrintCotizacion = function (recordID) {
+
+            //Antes de Imprimir Verificar que este guardada la Cotización
+            if (recordID == 0)
+            {
+                var message = "Antes de Imprimir la Cotización necesita ser Guardada";
+                if (message.length > 0)
+                {
+                    $('#dvBodyInfoCot').html("<div><ul>" + message + "</ul></div>");
+                    $('#dvWinInfoCot').show();
+                }
+                return;
+            }
+
+            // Ejecuto el calculo para tener los valores mas actualizados
+            $.get(window.jsUrls.Cotizar, {ejecutaCalculo: true}, function (msg) {   
+                $("#dvRefreshCalculo").html(msg);
+
+                // Refrescar el grid de Desglose por Vehiculo
+                RefreshDetalleTables('tblDesglosePago', 'RefreshCalculoVehiculos', 'Cotizacion');
+
+                // Refrescar la pestaña de formas de pago
+                RefreshDetalleTables('tblFormasPago', 'RefreshCalculoFormasPagos', 'Cotizacion');
+
+                var line1 = "1 Pago de: " + $('#mPago1de').val();
+                var line2 = ($('#mPago2de').val() == "$0.00" ? "" :  $('#spTtlDsc2').html() + " " + $('#mPago2de').val());
+                var tPago = ($('#FormaPago').val() == "Anual/Unico" ? $('#TipoPago').val() : "");
+                var url   = '@Url.Content("~/AspNetForms/ReportViewer.aspx")' 
+                                                + "?REPORT=COTIZACION&CTZ=" + recordID 
+                                                + "&MNT=" + $('#ElTotalCtz').val()
+                                                + "&MSS=" + '@Model.DescripcionCobertura'
+                                                + "&LN1=" + line1 
+                                                + "&LN2=" + line2
+                                                + "&TPG=" + tPago;
+                window.open(url, "rptCtz", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+            });
+        }
+
+        // Función para imprimir la cotización
+      
+        // Función para imprimir la cotización
+        RefreshCalculoCedeComision = function () {    
+            $.get(window.jsUrls.CotizarCede, {ejecutaCalculo: true}, function (msg) { 
+                $("#dvRefreshCalculo").html(msg);
+
+                // Refrescar el grid de Desglose por Vehiculo
+                RefreshDetalleTables('tblDesglosePago', 'RefreshCalculoVehiculos', 'Cotizacion');
+
+                // Refrescar la pestaña de formas de pago
+                RefreshDetalleTables('tblFormasPago', 'RefreshCalculoFormasPagos', 'Cotizacion');
+            });
+
+            // Colocar como activa la pestaña de importe
+            $('#tabColor a[href="#tbImporteCtz"]').tab('show');
+
+            // Busco errores
+            $.get(window.jsUrls.WarningsC, function (warnings) {
+                var message = "";
+                $.each(warnings, function (key, value) { 
+                    message += "<li class='smallText'>" + value + "</li>";
+                });
+                if (message.length > 0) {
+                    $('#dvBodyInfo').html("<div><ul>" + message + "</ul></div>");
+                    $('#dvWinInfo').show();
+                }
+            });
+        }
+
+        // Función para imprimir la cotización
+        RefreshCalculoCotizacionCedida = function () {  
+            $.get(window.jsUrls.CotizarCedida, {ejecutaCalculo: true}, function (msg) {   
+                $("#dvRefreshCalculo").html(msg);
+
+                // Refrescar el grid de Desglose por Vehiculo
+                RefreshDetalleTables('tblDesglosePago', 'RefreshCalculoVehiculos', 'Cotizacion');
+
+                // Refrescar la pestaña de formas de pago
+                RefreshDetalleTables('tblFormasPago', 'RefreshCalculoFormasPagos', 'Cotizacion');
+            });
+
+            // Colocar como activa la pestaña de importe
+            $('#tabColor a[href="#tbImporteCtz"]').tab('show');
+
+            // Busco errores
+            $.get(window.jsUrls.WarningsC, function (warnings) {
+                var message = "";
+                $.each(warnings, function (key, value) { 
+                    message += "<li class='smallText'>" + value + "</li>";
+                });
+                if (message.length > 0) {
+                    $('#dvBodyInfo').html("<div><ul>" + message + "</ul></div>");
+                    $('#dvWinInfo').show();
+                }
+            });
+        }
+
+        // Setear click de las tablas
+        SetHighLightClickInTables('tblVehiculos');
+        SetHighLightClickInTables('tblConductores');
+        SetHighLightClickInTables('tblProspectos');
+        SetHighLightClickInTables('tblFormasPago');
+        SetHighLightClickInTables('tblTarjetasP');
+
+        // Setear los datos en las tablas
+        SetDataInTables('tblVehiculos',   @Html.Raw(Json.Encode(Model.vehiculos)));
+        SetDataInTables('tblConductores', @Html.Raw(Json.Encode(Model.conductores)));
+        SetDataInTables('tblProspectos',  @Html.Raw(Json.Encode(Model.prospectos)));
+        SetDataInTables('tblFormasPago',  @Html.Raw(Json.Encode(Model.CalculoCotizacion.OpcionesPagoInfo)));
+        SetDataInTables('tblTarjetasP',   @Html.Raw(Json.Encode(Model.DocumentosPago)));
+        
+        // Totales de Pagos
+        TotalizaPagos = function () {
+            $('#tblTarjetasP thead th').each(function(i)
+            {
+                if (i == 4 || i == 5)
+                {
+                    var total = 0;
+                    $("#tblTarjetasP tr:not('.totalColumn')").each(function()
+                    {
+                        var value = parseInt($('td', this).eq(i).text().substring(1).replace(',', ''));
+                        if (!isNaN(value))
+                        {
+                            total += value;
+                        }
+                    });
+    
+                    $('#tblTarjetasP tfoot td').eq(i).html("<strong>" + moneyFormatter(total) + "</strong>");
+                }
+            });
+        };
+        
+        // Muestro totales
+        TotalizaPagos();
+
+        if('@Model.nQuitarPorPrima' != 0)
+        {
+            RefreshCalculoCotizacionCedida();
+        }
+               
+    });
+</script>

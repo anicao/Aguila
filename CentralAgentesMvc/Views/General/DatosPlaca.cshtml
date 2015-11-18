@@ -1,0 +1,29 @@
+﻿@model CentralAgentesMvc.Models.CarExpressModel
+@{
+    ViewBag.Title = "Placa y Serie";
+}
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdatePlacaVehiculo", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmSeriePlaca" }))
+    {        
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+              
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Placa:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.Placa, new { @class = "form-control input-sm uppercase", @maxlength = "8", @placeholder = "Placa", value = Model.Placa })
+                @Html.ValidationMessageFor(m => m.Placa)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Serie:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.Serie, new { @class = "form-control input-sm uppercase", @maxlength = "17", @placeholder = "Serie", value = Model.Serie })
+                @Html.ValidationMessageFor(m => m.Serie)
+            </div>
+        </div>
+        
+        @Html.HiddenFor(m => m.VehiculoID, new { value = Model.VehiculoID })
+    }
+</div>

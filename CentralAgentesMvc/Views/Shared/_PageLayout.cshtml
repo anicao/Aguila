@@ -1,0 +1,134 @@
+﻿@model dynamic
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Aguila - Agentes</title>
+
+    <link href="@Url.Content("~/favicon.ico")" type="image/x-icon" rel="shortcut icon" />
+
+    <link href="~/Content/bootstrap/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssSite")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrapEx")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqplot")
+    @Scripts.Render("~/bundles/elaguila")
+
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <section id="header">
+                    @Html.Partial("_Header")
+                </section>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mainContainer" class="container-fluid margin-top">
+        @RenderBody()
+    </div>
+
+    <div class="footer" id="footer">
+        @Html.Partial("_Footer") 
+    </div>
+
+    <!-- Ventana de errores -->
+    <div id="dvWinErrors" class="alert alert-danger alert-dismissible alertFloat" role="alert">
+        <button type="button" class="close" onclick="$('#dvWinErrors').hide()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Por favor corrija los siguientes errores:</strong>
+        <hr style="margin-top: 4px; margin-bottom: 4px;" />
+
+        <div id="dvBodyError"></div>
+    </div>
+
+    <!-- Ventana de warnings -->
+    <div id="dvWinInfo" class="alert alert-warning alert-dismissible alertFloat" role="alert">
+        <button type="button" class="close" onclick="$('#dvWinInfo').hide()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Información sobre el Cálculo:</strong>
+        <hr style="margin-top: 4px; margin-bottom: 4px;" />
+
+        <div id="dvBodyInfo"></div>
+    </div>
+
+    <!-- Ventana de warnings -->
+    <div id="dvWinInfoCot" class="alert alert-warning alert-dismissible alertFloat" role="alert">
+        <button type="button" class="close" onclick="$('#dvWinInfoCot').hide()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Información sobre la Cotización:</strong>
+        <hr style="margin-top: 4px; margin-bottom: 4px;" />
+
+        <div id="dvBodyInfoCot"></div>
+    </div>
+
+</body>
+</html>
+@RenderSection("scripts", required: false)
+
+<script type="text/javascript">
+    // Disable caching of AJAX responses 
+    $.ajaxSetup({ cache: false,
+        statusCode: {
+            302: function () {
+                alert("Vuelve a iniciar session");
+            }
+        }    
+     });
+    $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    $.blockUI.defaults.message = '<h4><i class="fa fa-spinner fa-2x fa-pulse"></i>&nbsp;&nbsp;&nbsp;Espere por favor.</h4>';
+
+    $("#dvBodyError").niceScroll({ cursorcolor: "#446e9b" });
+    $("#dvBodyError").mouseover(function () {
+                         $(this).getNiceScroll().show();
+                         $(this).getNiceScroll().resize();
+                     })
+                     .mouseout(function () {
+                         $(this).getNiceScroll().hide();
+                     });
+
+    window.RefreshDT    = false;
+    window.RefreshGT    = false;
+    window.RefreshPP    = true;
+    window.CarsAdded    = 0;
+    window.DriversAdded = 0;
+    window.jsUrls = {
+        DtGeneral: '@Url.Action("DetalleGeneral", "General")',
+        CotizarCedida: '@Url.Action("CalculoCotizacionCedida", "Cotizacion")',
+        CotizarCede: '@Url.Action("CalculoCotizacionCede", "Cotizacion")',
+        Cotizar  :  '@Url.Action("CalculoCotizacion", "Cotizacion")',
+        SaveData :  '@Url.Action("GuardarDocumento", "General")',
+        AddDriver:  '@Url.Action("CreateConductor", "General")',
+        AddCar   :  '@Url.Action("CreateVehiculo", "General")',
+        RefViewDG:  '@Url.Action("RefreshDetalleGeneral", "General")',
+        WarningsC:  '@Url.Action("GetErroresCalculo", "Cotizacion")',
+        RefViewCP:  '@Url.Action("RefreshComplement", "General")',
+        RefViewer:  '@Url.Content("~/AspNetForms/")',
+        LiberaCot: '@Url.Action("LiberarCot", "General")',
+        ValSegObli: '@Url.Action("ValSeguroObli", "General")',
+        MontoSegObli: '@Url.Action("MontoSegObli", "General")',
+        reloadCotizacion: '@Url.Action("Index", "Cotizacion", new { modulo = "Cotizaciones" })',
+        home: '@Url.Action("Index", "Home")',
+        outSession: '@Url.Action("LogOff", "Account")',
+        editaPerfil: '@Url.Action("UserProfile", "Account")'
+    };
+
+    // Configuración de los switch
+    $.fn.bootstrapSwitch.defaults.size = 'mini';
+    $.fn.bootstrapSwitch.defaults.onColor = 'primary';
+    $.fn.bootstrapSwitch.defaults.offColor = 'warning';
+
+    var uAg = navigator.userAgent.toLowerCase();
+    var isMobile = !!uAg.match(/android|iphone|ipad|ipod|blackberry|symbianos/i);
+
+    if (isMobile)
+        $('#footer').hide();
+
+</script>

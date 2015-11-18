@@ -1,0 +1,16 @@
+﻿.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 250px;
+    font-size: 33px;
+    color: #fff;
+    line-height: 80px;
+    text-align: center;
+    background: #C0325B;
+     box-shadow: 1px 1px 12px #888888;
+}
+.noBorder
+{
+    border:none;
+    
+    }

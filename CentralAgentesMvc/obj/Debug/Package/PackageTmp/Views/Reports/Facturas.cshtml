@@ -1,0 +1,183 @@
+﻿@model CentralAgentesMvc.Models.ReportViewModel
+
+@{
+    ViewBag.Title = "Consulta Facturas";
+}
+<script type="text/javascript">
+    var uri = {
+        facturas: '@Url.Action("GetInvoices", "Reports")',
+        agenteId: '@Model.AgenteID',
+        listaCliente: '@Url.Action("ClientsList", "Reports")',
+        endosos: '@Url.Action("GetEndosos", "Endosos")'
+
+    }
+    
+</script>
+<script src="@Url.Content("~/Scripts/viewJs/Jfacturas.js")" type="text/javascript"></script>
+<div id="panels">
+    <div class="row clearfix">
+		<div class="col-md-3 column">
+		    <div class="well well-md form-horizontal">
+                <h4>Consulta de Facturas y endosos</h4>
+                <hr />
+                @if (Session["UserRol"].ToString() == "A")
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AgenteID, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+                        <div class="col-md-9">
+                            <div style="margin-bottom: 2px">
+                                @Html.TextBoxFor(m => m.AgenteID, new { @class = "form-control", @placeholder = "agente", autocomplete = "off", value = Model.AgenteID })
+                                @Html.ValidationMessageFor(m => m.AgenteID)
+                            </div>
+                            <div>
+                                @Html.DropDownListFor(m => m.AgenteID,
+                                                            new SelectList(Model.AgentesSource, "lngAgente", "strNombre", 1),
+                                                            new { @class = "form-control", id = "ddlAgentes" })
+                                @Html.ValidationMessageFor(m => m.AgenteID)
+                            </div>
+                        </div>
+                    </div>
+                }
+                    
+                <div class="form-group">
+                    <label class = "col-md-3 control-label" style = "text-align: left;">Expedición:</label>
+                    <div class="col-md-9">
+                        <div id="dvDesde" style="margin-bottom: 2px">
+                            <div class="input-group date">
+                                @Html.TextBoxFor(m => m.FechaDesde, new { @class = "form-control", @maxlength = "10", @placeholder = "Fecha Inicio", value = Model.FechaDesde })
+                                <span class="btn btn-default input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div id="dvHasta">
+                            <div class="input-group date">
+                                @Html.TextBoxFor(m => m.FechaHasta, new { @class = "form-control", @maxlength = "10", @placeholder = "Fecha Final", value = Model.FechaHasta })
+                                <span class="btn btn-default input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PolizaID, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.PolizaID, new { @class = "form-control", @placeholder = "póliza", autocomplete = "off", value = Model.PolizaID })
+                        @Html.ValidationMessageFor(m => m.PolizaID)
+                    </div>
+                </div>
+ 
+                <div class="form-group">
+                    @Html.LabelFor(m => m.NombreAsegurado, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.NombreAsegurado, new { @class = "form-control", @placeholder = "nombre asegurado", autocomplete = "off", value = Model.NombreAsegurado })
+                        @Html.ValidationMessageFor(m => m.NombreAsegurado)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-block" onclick="app.getFacturas(1, 10)">Consultar Facturas y Endosos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9 column">
+            <div class="well well-md">
+            <ul class="nav nav-tabs" data-tabs="tabs" id="tabColor">
+                <li class="active">
+                    <a href="#facturas" data-toggle="tab">Facturas</a>
+                </li>
+                <li id="tbHiddenInNew">
+                    <a href="#endosos" data-toggle="tab">Endosos</a>
+                </li>
+            </ul>
+               <div id="tabGen" class="tab-content ">
+                <div class="tab-pane active" id="facturas">
+                  <h4></h4>
+                <hr />
+                <table id="tblInvoicesFC"
+                       data-height="500"
+                       data-striped="true"
+                       data-cache="false"
+                       data-classes="table table-hover table-bordered table-condensed smallText"
+                       data-show-refresh="true"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-search="false"
+                       data-id-field='nPoliza' 
+                       data-side-pagination='server'
+                       data-page-list="[5, 10, 25, 50, 100]"
+                       data-pagination="true">
+                    <thead>
+                    <tr>
+                        <th data-field="nPoliza"       data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">No Póliza</th>
+                        <th data-field="dfExpedicion"  data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Fecha Expedición</th>
+                        <th data-field="cNombreA"      data-sortable="true"  data-width="300" data-align="left"   data-valign="middle">Asegurado</th>
+                        <th data-field="nEndoso"       data-sortable="true"  data-width="50"  data-align="center" data-valign="middle">Endoso</th>
+                        <th data-field="nRecibo"       data-sortable="true"  data-width="50"  data-align="center" data-valign="middle">Recibo</th>
+                        <th data-field="Fecha_Emision" data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Fecha Factura</th>
+                        <th data-field="Serie"         data-sortable="true"  data-width="90" data-align="center" data-valign="middle">Serie</th>
+                        <th data-field="Folio"         data-sortable="true"  data-width="90" data-align="center" data-valign="middle">Folio</th>
+                        <th data-field="LnkPDF"
+                            data-sortable="false"
+                            data-width="80"
+                            data-align="center"
+                            data-valign="middle"
+                            data-formatter="fieldFormatterFCT"
+                            data-events="operateEventsFCT">
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                </div>
+                <div class="tab-pane" id="endosos">
+                    <h4></h4>
+                <hr />
+                <table id="tblEndosos"
+                       data-striped="true"
+                       data-cache="false"
+                       data-classes="table table-hover table-bordered table-condensed smallText"
+                       data-show-refresh="true"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-search="false"
+                       data-id-field='nPoliza' 
+                       data-side-pagination='server'
+                       data-page-list="[5, 10, 25, 50, 100]"
+                       data-pagination="true">
+                    <thead>
+                    <tr>
+                        <th data-field="Poliza"  data-sortable="true"  data-width="10"  data-align="center" data-valign="middle">No Póliza</th>
+                        <th data-field="Endoso"  data-sortable="true"  data-width="5"  data-align="center" data-valign="middle">Endoso</th>
+                        <th data-field="recibo"  data-sortable="true"  data-width="5"  data-align="center" data-valign="middle">Recibo</th>
+                        <th data-field="Expedicion" data-sortable="true"  data-width="10"  data-align="center" data-valign="middle">Fecha Expedición</th>
+                        <th data-field="NombreA" data-sortable="true"  data-width="20" data-align="left"   data-valign="middle">Asegurado</th>
+                        
+                        <th data-field="Solicitud" data-sortable="true"  data-width="8"  data-align="center" data-valign="middle">Solicitud</th>
+                        <th data-field="FechaInicio" data-sortable="true"  data-width="14"  data-align="center" data-valign="middle">Fecha Inicio Vigencia</th>
+                        <th data-field="FechaFin" data-sortable="true"  data-width="10"  data-align="center" data-valign="middle">Fecha Fin Vigencia</th>
+                        <th data-field="LnkPDF"
+                            data-sortable="false"
+                            data-width="5"
+                            data-align="center"
+                            data-valign="middle"
+                            data-formatter="fieldFormatterEnd"
+                            data-events="operateEventsFCT">
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+              </div>
+                </div>
+             
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.AgenteName, new { value = Model.AgenteName })
+    @Html.HiddenFor(m => m.ClienteID, new { value = Model.ClienteID })
+</div>

@@ -1,0 +1,111 @@
+﻿@model CentralAgentesMvc.Models.ConductorModel
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateConductor", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmDriver" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Nombre del Conductor:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.TextBoxFor(m => m.nombre, new { @class = "form-control input-sm uppercase",
+                                                      @placeholder = "Nombre del Conductor",
+                                                      value = Model.nombre })
+                @Html.ValidationMessageFor(m => m.nombre)
+            </div>
+        </div>
+        
+         <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Edad del conductor:", new { @class = "col-xs-3 control-label-sm" })
+
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.Edad, new { @class = "form-control input-sm", @maxlength = "2"})
+                @Html.ValidationMessageFor(m => m.Edad)                
+            </div>
+            <div id="dvFechaNac" class="form-validator col-xs-2" style="padding-left: 1px;">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.fechaNacimiento
+                                        , new { @class = "form-control input-sm"
+                                              , @maxlength = "10"
+                                              , placeholder = "Fecha Nacimiento"
+                                              , value = Model.fechaNacimiento })
+                    <span class="btn btn-default input-sm input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            @Html.Label("Sexo:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="col-xs-3">
+                @Html.CheckBoxFor(m => m.EsHombre, new { @class = "form-control checkbox-sm", @id = "ElSexo" })
+            </div>
+        </div>
+ 
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Estado Civil:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="col-xs-4">
+                @Html.DropDownListFor(m => m.estadoCivil, new SelectList(Model.EstadoCivilSource, "Key", "Value", 0), new { @class = "form-control input-sm" })
+                @Html.ValidationMessageFor(m => m.estadoCivil)
+            </div>
+
+            @Html.Label("Extensión RC:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-3">
+                @Html.CheckBoxFor(m => m.TieneExtensionRC, new { @class = "form-control checkbox-sm", @id = "TieneExtensionRC" })
+            </div>
+        </div>
+        
+        @Html.HiddenFor(m => m.sexo, new { value = Model.sexo })
+        @Html.HiddenFor(m => m.DescripcionSexo, new { value = Model.DescripcionSexo })
+        @Html.HiddenFor(m => m.nNumCond, new { value = Model.nNumCond })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        //SoloLetras("nombre");
+        ValidaNumero('Edad');
+
+        $('#ElSexo').bootstrapSwitch({ onText: "Masculino", offText: "Femenino" });
+        $('#TieneExtensionRC').bootstrapSwitch({ onText: "Sí", offText: "No" });
+
+        // Para selecciona el Texto de los Input 
+        $("input").on('mouseup', function () { $(this).select(); });
+
+        $("#dvFechaNac .input-group.date").datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "es",
+            todayHighlight: true,
+            autoclose: true
+        }).on("changeDate", function (ev) {
+            var edad = new Date().getFullYear() - ev.date.getFullYear();
+            $("#Edad").val(edad)
+        });
+
+        $("#Edad").on("change", function () {
+            var d = new Date();
+            $("#dvFechaNac .input-group.date").datepicker('setDate', d.getUTCDate() + "/" + d.getMonth() + "/" + (d.getFullYear() - $("#Edad").val()));
+        });
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+    });
+</script>

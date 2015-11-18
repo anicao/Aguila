@@ -1,0 +1,7 @@
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\bin\Debug\Reports\CotizacionWeb.png
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\bin\Debug\Reports\imgCotizacion.png
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\bin\Debug\EnviaCotizacionMail.exe.config
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\bin\Debug\EnviaCotizacionMail.exe
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\bin\Debug\EnviaCotizacionMail.pdb
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\obj\x86\Debug\EnviaCotizacionMail.exe
+C:\Users\Auditoria 1\Documents\Aguila Projects\CentralAgentesMvc\EnviaCotizacionMail\obj\x86\Debug\EnviaCotizacionMail.pdb

@@ -1,0 +1,10 @@
+﻿@model CentralAgentesMvc.Models.CarExpressModel
+
+<div class="form-group" style="margin-bottom: 1px;">
+    <div class="col-sm-6" style="padding-right: 1px;">
+        <b>Placas :</b><br />@Html.TextBoxFor(m => m.Placa, new { @class = "noInput", @placeholder = "placa", value = Model.Placa, @readonly = "readonly", id = "PlacaCar" })
+    </div>
+    <div class="col-sm-6" style="padding-left: 1px;">
+        <b>Serie :</b><br />@Html.TextBoxFor(m => m.Serie, new { @class = "noInput", @placeholder = "serie", value = Model.Serie, @readonly = "readonly", id = "SerieCar" })
+    </div>
+</div>

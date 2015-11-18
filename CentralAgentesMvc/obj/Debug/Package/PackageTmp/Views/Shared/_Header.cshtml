@@ -1,0 +1,131 @@
+﻿@if (Request.IsAuthenticated)
+{
+<!-- Brand and toggle get grouped for better mobile display -->           
+<div class="navbar-header">
+   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nvMenu">
+   <span class="icon-bar"></span>
+   <span class="icon-bar"></span>
+   <span class="icon-bar"></span>
+   </button>                
+   <a style="text-decoration: none;" href='@Url.Action("Index", "Home")'>
+   <img class="img-logo" alt="" src="" />
+   </a>
+   <h1>Agentes</h1>
+</div>
+if (Session["ChangePassword"] != null) {
+var log= Session["ChangePassword"];
+if (log.ToString() == "1")
+{
+<script type="text/javascript">
+    FristLogin = true;
+   
+</script>         
+}
+} 
+<!-- Collect the nav links, forms, and other content for toggling -->
+<div class="collapse navbar-collapse" id="nvMenu">
+   <ul class="nav navbar-nav">
+      <li class="active">
+         <a href='@Url.Action("Index", "Home")'><span class="fa fa-home"></span> Home</a>
+      </li>
+      <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+         <span class="fa fa-car"></span> Cotizaciones <span class="caret"></span>
+         </a>
+         <ul class="dropdown-menu" role="menu">
+            <li><a href='@Url.Action("Index", "Cotizacion", new { modulo = "Cotizaciones" })'>Mis Cotizaciones</a></li>
+            <li class="divider"></li>
+            <li><a href='@Url.Action("CotExpress", "Cotizacion", new { Tipo = "Agentes" })'>Cotizador Express</a></li>
+            @{
+            if (Session["UserRol"] != null)
+            {
+            if (Session["UserRol"].ToString() == "A")
+            {
+            <li><a onclick="CotizaExpressWin('Publicos','@Url.Action("CotExpress", "Cotizacion")');">Cotizador Serv. Públicos</a>
+            </li>
+            }
+            }
+            }
+         </ul>
+      </li>
+      <li>
+         <a href='@Url.Action("Index", "Cotizacion", new { modulo = "Renovaciones" })'><span class="fa fa-files-o"></span> Renovaciones</a>
+      </li>
+      <li>
+         <a href='@Url.Action("Facturas", "Reports")'><span class="fa fa-barcode"></span> Facturas</a>
+      </li>
+      <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+         <span class="fa fa-file-text"></span> Reportes <span class="caret"></span>
+         </a>
+         <ul class="dropdown-menu" role="menu">
+            <li><a onclick="ReportesAgentesWin('Liquidaciones', '@Url.Action("Agentes", "Reports")')">Liquidaciones</a></li>
+            <li><a onclick="ReportesAgentesWin('Movimientos', '@Url.Action("Agentes", "Reports")')">Movimientos</a></li>
+            <li class="divider"></li>
+            <li><a onclick="ReportesAgentesWin('Renovaciones', '@Url.Action("Agentes", "Reports")')">Renovaciones</a></li>
+            <li><a onclick="ReportesAgentesWin('Cobranza', '@Url.Action("Agentes", "Reports")')">Cobranza</a></li>
+         </ul>
+      </li>
+      <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+         <span class="fa fa-file-text"></span> Documentos <span class="caret"></span>
+         </a>
+         <ul class="dropdown-menu" role="menu">
+            <li><a>Condiciones Generales </a></li>
+         </ul>
+      </li>
+       <li>
+         <a href='#'><span class="fa fa-barcode"></span> Preguntas frecuentes</a>
+      </li>
+      @{
+      if (Session["UserRol"] != null)
+      {
+      if (Session["UserRol"].ToString() == "A")
+      {
+      <li>
+         <a  onclick="constrWin('Administración','@Url.Action("EnDesarrollo", "Home")');"><span class="fa fa-tachometer"></span> Administración</a>
+      </li>
+      }
+      }
+      }
+   </ul>
+   <div class="btn-group pull-right dropdown">
+      <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" style="margin-right: 3px;">
+         <span class="fa fa-user fa-lg"></span>&nbsp;
+         @{
+         var logged = (System.Data.DataSet)Session["UserObj"];
+         String AgenteName = logged.Tables["catAgentes"].Rows[0]["cNombre"].ToString();
+         var name = AgenteName.ToUpper();
+         <text>@name</text>
+         }
+         &nbsp;<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+         <li>
+            <a onclick="UserProfileWin('@Url.Action("UserProfile", "Account")')">Ver Perfil</a>
+         </li>
+         <li class="divider"></li>
+         <li>
+            <a data-toggle="modal" data-target="#helpWin">Ayuda</a>
+         </li>
+         <li>@Html.ActionLink("Logout", "LogOff", "Account")</li>
+      </ul>
+   </div>
+</div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".nav-collapse .nav li a").click(function (e) {
+            $(".nav-collapse .nav .active").removeClass("active")
+            $(this).parent().addClass("active")
+        });
+    });
+
+    $('#searchText').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13 && $(this).val() != "") {
+            $('#searchform').submit();
+        }
+
+    });
+</script>

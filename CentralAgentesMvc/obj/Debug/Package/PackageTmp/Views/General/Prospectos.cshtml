@@ -1,0 +1,74 @@
+﻿@model Negocio.ClasesCentral.ClsProspecto
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateProspecto", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmProspect" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Auto (Tipo y Modelo):", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.TextBoxFor(m => m.TipoModelo, new { @class = "form-control input-sm uppercase"
+                                                        , @placeholder = "Caracteristicas del Auto"
+                                                        , value = Model.TipoModelo })
+                @Html.ValidationMessageFor(m => m.TipoModelo)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Compañia Aseguradora:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.TextBoxFor(m => m.Compañia, new { @class = "form-control input-sm uppercase", @placeholder = "Compañia Aseguradora", value = Model.Compañia })
+                @Html.ValidationMessageFor(m => m.Compañia)
+            </div>
+        </div>         
+         <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Término de Vigencia:", new { @class = "col-xs-3 control-label-sm" })
+            <div id="dvFechaVig" class="col-xs-3">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.TerminoVigencia, String.Format("{0:dd/MM/yyyy}", Model.TerminoVigencia) , new { @class = "form-control input-sm"
+                                                                 , @maxlength = "10"   
+                                                                 , @placeholder = "Término de Vigencia"
+                                                                 , value = Model.TerminoVigencia })
+                    <span class="btn btn-default input-sm input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>        
+        
+        @Html.HiddenFor(m => m.nconsePros, new { value = Model.nconsePros })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#dvFechaVig .input-group.date").datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "es",
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+    });
+</script>

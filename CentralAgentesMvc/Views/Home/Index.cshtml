@@ -1,0 +1,131 @@
+﻿@model CentralAgentesMvc.Models.HomeViewModel
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<div id="panels">
+    <div class="row clearfix">
+        <div class="col-md-3 column" style="padding-right: 2px;">
+            <div class="well well-md well_Ctz col-md-12" style="padding: 1px;">
+                <div class="col-md-5">
+                    <h5>Cotizaciones</h5>
+                    <hr />
+                    <h5>Prima Neta Emitida</h5>
+                </div>
+                <div class="col-md-7 text-right" style="background-color: #2d9ebf; color: White">
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0}", Model.CotizacionesMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0}", Model.CotizacionesAño))</p>
+                        </div>
+                    </div>
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.PolPrimNetaMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.PolPrimNetaAño))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 column" style="padding-left: 2px; padding-right: 2px;">
+            <div class="well well-md well_Rnv col-md-12" style="padding: 1px;">
+                <div class="col-md-5">
+                    <h5>Renovaciones</h5>
+                    <hr />
+                    <h5>Prima Neta Emitida</h5>
+                </div>
+                <div class="col-md-7 text-right" style="background-color: #ffff8c;">
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0}", Model.RenovacionesMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0}", Model.RenovacionesAño))</p>
+                        </div>
+                    </div>
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.RenPolPrimNetaMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.RenPolPrimNetaAño))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 column" style="padding-left: 2px; padding-right: 2px;">
+            <div class="well well-md well_End col-md-12" style="padding: 1px;">
+                <div class="col-md-5">
+                    <h5>Endosos</h5>
+                    <hr />
+                    <h5>Prima Neta Endosos</h5>
+                </div>
+                <div class="col-md-7 text-right" style="background-color: #ffff8c;">
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0}", Model.EndososMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0}", Model.EndososAño))</p>
+                        </div>
+                    </div>
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.MontoEndososMes))</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 1px;">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.MontoEndososAño))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 column" style="padding-left: 2px;">
+            <div class="well well-md well_Otr col-md-12" style="padding: 1px;">
+                <div class="col-md-5">
+                    <h5>Últimas comisiones</h5>
+                    <hr />
+                    <h5>Prima Total Emitida</h5>
+                </div>
+                <div class="col-md-7 text-right" style="background-color: #2d9ebf; color: White">
+                    <div class="col-md-13">
+                      <h5>@Html.Raw(String.Format("{0:dd/MM/yyyy}", Model.UltimoPagoCom))</h5>
+                      <br />
+                    </div>
+                    <div class="col-md-13">
+                        <div class="col-md-6">
+                            <p><sub>Mensual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.PrimaTotalMes))</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><sub>Anual</sub><br />@Html.Raw(String.Format("{0:C0}", Model.PrimaTotalAño))</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+		<div class="col-md-8 column">
+            @Html.Action("Welcome")
+        </div>
+
+		<div class="col-md-4 column">
+		    <div class="well well-md">
+                <h4>Notificaciones</h4>
+                <hr />
+                @Html.Action("NotifyCarousel")
+            </div>
+        </div>
+    </div>
+</div>

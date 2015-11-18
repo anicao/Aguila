@@ -1,0 +1,601 @@
+﻿@model CentralAgentesMvc.Models.VehiculoModel
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateVehiculo", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmCar" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Código Postal:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-3">
+                @Html.TextBoxFor(m => m.codigoPostal, new { @class = "form-control input-sm", @maxlength = "5", @placeholder = "Código Postal", value = Model.codigoPostal, @id = "codigoPostal" })
+                @Html.ValidationMessageFor(m => m.codigoPostal)
+            </div>
+
+            @Html.Label("Sub Ramo:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.DropDownListFor(m => m.subRamo, new SelectList(Model.SubRamoSource, "strCve", "strDesc", "R"), new { @class = "form-control input-sm", id = "ddlSubRamoA" })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Conductor:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.DropDownListFor(m => m.conducAsign, new SelectList(Model.conductores, "nNumCond", "nombre", 1), new { @class = "form-control input-sm" })
+                @Html.ValidationMessageFor(m => m.conducAsign)
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Modelo:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-3"  style="margin-bottom: 1px">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.modelo, new { @class = "form-control input-sm",
+                                                          placeholder = "Modelo",
+                                                          value = Model.modelo,
+                                                          @id = "txtModelo",
+                                                          ondblclick = "SearchCar();" })
+                    @Html.ValidationMessageFor(m => m.modelo)
+                    <span class="btn btn-default input-sm input-group-addon" onclick="SearchCar();">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-xs-7">
+                @Html.TextBoxFor(m => m.DescripcionTipo, new { @class = "form-control input-sm readOnlyWhite",
+                                                               @placeholder = "Descripción Modelo",
+                                                               value = Model.DescripcionTipo,
+                                                               @readonly = "readonly",
+                                                               @id = "txtDescripcionTipo" })
+                @Html.ValidationMessageFor(m => m.DescripcionTipo)
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Año:", new { @class = "col-xs-2 control-label-sm" })
+            <div id="año" class="form-validator col-xs-3">
+                @Html.DropDownListFor(m => m.año, new SelectList(Model.YearsSource, "Key", "Value", 1), new { @class = "form-control input-sm", id = "ddlYears" })
+            </div>
+
+            <div id="dvCascadingM">
+                @Html.Label("Marca:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+                <div class="form-validator col-xs-4">
+                    @Html.DropDownListFor(m => m.MarcaID, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlMarcas" })
+                </div>
+            </div>
+        </div>
+
+        <div id="dvCascadingS" class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Sub Marca:", new { @class = "col-xs-8 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.DropDownListFor(m => m.SubMarcaID, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlSubMarcas" })
+            </div>
+        </div>
+        <div id="dvCascadingT" class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Tipo:", new { @class = "col-xs-8 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.DropDownListFor(m => m.TipoID, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlTipos" })
+            </div>
+        </div>
+        
+        <hr style="margin-top: 8px; margin-bottom: 8px;" />
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Garage Casa:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="col-xs-2">
+                @Html.CheckBoxFor(m => m.EstacionaEnCasa, new { @class = "form-control checkbox-sm", @id = "EstacionaEnCasa" })
+            </div>
+
+            @Html.Label("% Daños Materiales:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.deducDañMat, new SelectList(Model.PorcentajeDMSource, "curMonto", "curMonto", 1), new { @class = "form-control input-sm" })
+            </div>
+
+            @Html.Label("Cobertura Gastos Médicos:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.coberGtoMed, new SelectList(Model.CoberturaGMSource, "curMonto", "curMonto", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Garage Oficina:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="col-xs-2">
+                @Html.CheckBoxFor(m => m.EstacionaEnOfic, new { @class = "form-control checkbox-sm", @id = "EstacionaEnOfic" })
+            </div>
+
+            @Html.Label("% Deducible Robo Total:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.deducRobTot, new SelectList(Model.PorcentajeRTSource, "curMonto", "curMonto", 1), new { @class = "form-control input-sm" })
+            </div>
+
+            @Html.Label("Cobertura Resp Civil:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.coberRepCiv, new SelectList(Model.CoberturaRCSource, "curMonto", "curMonto", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Uso de Trabajo:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="col-xs-2">
+                @Html.CheckBoxFor(m => m.UsaParaTrabajo, new { @class = "form-control checkbox-sm", @id = "UsaParaTrabajo" })
+            </div>
+
+            @Html.Label("Exención de Deducible:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.CheckBoxFor(m => m.TieneExencionDeducible, new { @class = "form-control checkbox-sm", @id = "TieneExencionDeducible" })
+            </div>
+
+            @Html.Label("Cobertura RC Catastrofica:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.coberRepCivCat, new SelectList(Model.CoberturaRCCSource, "curMonto", "curMonto", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>        
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Asesoria y Defensa Legal:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-2">
+                @Html.CheckBoxFor(m => m.UsaAsesoriaLegal, new { @class = "form-control checkbox-sm", @id = "UsaAsesoriaLegal" })
+            </div>
+
+            @Html.Label("Suma Asegurada Fija:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.sumAsegFija, new SelectList(Model.SumaAseguradaSource,"Key", "Value", "N"), new { @class = "form-control input-sm" })
+            </div>
+
+            @Html.Label("Asistencia en Viajes:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.asistenciaViaje, new SelectList(Model.AsistenciaViajeSource, "Key", "Value", "R"), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Se cubre el SUVA:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-2">
+                @Html.CheckBoxFor(m => m.TieneSUVA, new { @class = "form-control checkbox-sm", @id = "TieneSUVA" })
+            </div>
+
+            @Html.Label("Vehiculo Sustituto:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.vehSus, new SelectList(Model.VehSustitutoSource, "Key", "Value"), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        
+        <hr style="margin-top: 8px; margin-bottom: 8px;" />
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Número de Puertas:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.puertas, new { @class = "form-control input-sm", @maxlength = "1", @placeholder = "No. de Puertas", value = Model.puertas, @id = "puertas" })
+            </div>
+
+            @Html.Label("Número de Placa:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.placas, new { @class = "form-control input-sm uppercase", @maxlength = "8", @placeholder = "No. de Placas", value = Model.placas })
+            </div>
+
+            @Html.Label("Número de Serie:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.numeroSerie, new { @class = "form-control input-sm uppercase", @maxlength = "18", @placeholder = "No. de Serie", value = Model.numeroSerie })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Número de Cilindros:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.cilindros, new { @class = "form-control input-sm", @maxlength = "1", @placeholder = "No. de Cilindros", value = Model.cilindros, @id = "cilindros" })
+            </div>
+
+            @Html.Label("NCI:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.ccNCI, new { @class = "form-control input-sm", @placeholder = "No. de NCI", value = Model.ccNCI })
+            </div>
+
+            @Html.Label("Serie Correcta:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="col-xs-2">
+                @Html.CheckBoxFor(m => m.EsSerieCorrecta, new { @class = "form-control checkbox-sm", @id = "EsSerieCorrecta", @readonly="readonly" })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Tipo de Transmisión:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.transmision, new SelectList(Model.TipoTransmisionSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+            </div>
+
+            @Html.Label("Tipo de Alarma:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.DropDownListFor(m => m.tpoAlarma, new SelectList(Model.TipoAlarmaSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        
+        <hr style="margin-top: 8px; margin-bottom: 8px;" />
+                
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Guia EBC:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-3">
+                @Html.DropDownListFor(m => m.fecEBC, new SelectList(Model.GuiaEBCSource, 1), new { @class = "form-control input-sm" })
+            </div>
+
+            @Html.Label("Página EBC:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.pagEBC, new { @class = "form-control input-sm", @placeholder = "Página EBC", value = Model.pagEBC, @id = "pagEBC" })
+            </div>        
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Valor del Equipo Especial:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-3">
+                @Html.TextBoxFor(m => m.sumaQqpoEsp, new { @class = "form-control input-sm", @placeholder = "Valor Equipo Especial", value = Model.sumaQqpoEsp, @id = "sumaQqpoEsp" })
+            </div>
+
+            @Html.Label("Valor del Auto:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.valorAuto, new { @class = "form-control input-sm", @placeholder = "Valor del Auto", value = Model.valorAuto, @id = "valorAuto" })
+                @Html.ValidationMessageFor(m => m.valorAuto)
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Descripción del Eq Especial:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-3">
+                @Html.TextBoxFor(m => m.descEqEsp, new { @class = "form-control input-sm uppercase", @placeholder = "Descripción Equipo Especial", value = Model.descEqEsp })
+            </div>
+
+            @Html.Label("Tipo Especifico del Autor:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.tpoEspecifAuto, new { @class = "form-control input-sm uppercase",
+                                                              @placeholder = "Tipo Especifico del Autor",
+                                                              value = Model.tpoEspecifAuto,
+                                                              @id = "txtTipoEspecifico"})
+                @Html.ValidationMessageFor(m => m.tpoEspecifAuto)
+            </div>
+        </div>
+        
+        @Html.HiddenFor(m => m.nNumVehi, new { value = Model.nNumVehi })
+        @Html.HiddenFor(m => m.titulo, new { value = Model.titulo })
+        @Html.HiddenFor(m => m.apellidoPaterno, new { value = Model.apellidoPaterno })
+        @Html.HiddenFor(m => m.apellidoMaterno, new { value = Model.apellidoMaterno })
+        @Html.HiddenFor(m => m.nombres, new { value = Model.nombres })
+        @Html.HiddenFor(m => m.campaña, new { value = Model.campaña })
+        @Html.HiddenFor(m => m.numVehiculos, new { value = Model.numVehiculos})
+        @Html.HiddenFor(m => m.numConductores, new { value = Model.numConductores })
+        @Html.HiddenFor(m => m.PolObligatoria, new { value = Model.PolObligatoria })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#EstacionaEnCasa').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#EstacionaEnOfic').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#UsaParaTrabajo').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#UsaAsesoriaLegal').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#TieneSUVA').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#EsSerieCorrecta').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#TieneExencionDeducible').bootstrapSwitch({ onText: "Si", offText: "No" });
+
+        if ($('#PolObligatoria').val() == "S") {
+            $('#coberGtoMed').val(0);
+            $('#coberRepCivCat').val(0)
+            $('#deducDa_Mat').val(0)
+            $('#deducRobTot').val(0)
+            $('#sumAsegFija').val("N")
+            $('#vehSus').val("N")
+            $('#asistenciaViaje').val("N")
+            $('#coberRepCivCat').val(0)
+            $('#PolObligatoria').val("S");
+
+            $("#coberGtoMed").prop('disabled', true);
+            $("#coberRepCivCat").prop('disabled', true);
+            $("#deducDa_Mat").prop('disabled', true);
+            $("#deducRobTot").prop('disabled', true);
+            $("#sumAsegFija").prop('disabled', true);
+            $("#vehSus").prop('disabled', true);
+            $("#asistenciaViaje").prop('disabled', true);
+            $("#vehSus").prop('disabled', true);
+            $("#coberRepCivCat").prop('disabled', true);
+            $('#TieneExencionDeducible').bootstrapSwitch('readonly', true);
+        }
+        else {
+            $('#PolObligatoria').val("N");
+        }
+        // Para selecciona el Texto de los Input 
+        $("input").on('mouseup', function () { $(this).select(); });
+
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        // Validación de campos numericos
+        ValidaNumero("codigoPostal");
+        ValidaNumero("puertas");
+        ValidaNumero("cilindros");
+        ValidaNumero("sumaQqpoEsp");
+        ValidaNumero("valorAuto");
+        ValidaNumero("pagEBC");
+
+
+        /*----------------------------------------------------------------------------*/
+        /*     Función para validar poliza seguro  obligatorio                        */
+        /*----------------------------------------------------------------------------*/
+
+        // Mensaje para Resposabilidad Civil
+        $('#coberRepCiv').on("change", function () {
+            $.ajax({
+                type: "POST",
+                url: window.jsUrls.MontoSegObli,
+                data: { coberRepCiv: $('#coberRepCiv').val() },
+                success: function (msg) {
+                    if (msg == "S") {
+                        $('#coberGtoMed').val(0);
+                        $('#coberRepCivCat').val(0)
+                        $('#deducDa_Mat').val(0)
+                        $('#deducRobTot').val(0)
+                        $('#sumAsegFija').val("N")
+                        $('#vehSus').val("N")
+                        $('#asistenciaViaje').val("N")
+                        $('#coberRepCivCat').val(0)
+                        $('#PolObligatoria').val("S");
+                        $('#coberRepCiv').val("100000");
+
+                        $("#coberGtoMed").prop('disabled', true);
+                        $("#coberRepCivCat").prop('disabled', true);
+                        $("#deducDa_Mat").prop('disabled', true);
+                        $("#deducRobTot").prop('disabled', true);
+                        $("#sumAsegFija").prop('disabled', true);
+                        $("#vehSus").prop('disabled', true);
+                        $("#asistenciaViaje").prop('disabled', true);
+                        $("#vehSus").prop('disabled', true);
+                        $("#coberRepCivCat").prop('disabled', true);
+                        $('#TieneExencionDeducible').bootstrapSwitch('readonly', true);
+                        //$("#coberRepCiv").prop('disabled', true);
+
+                        ShowAlertWindow("Con deducible de RC de 100,000 se considera seguro obligatorio", "Cobertura RC", "img-info");
+                    } else {
+                        $('#coberRepCiv').val()
+                        $("#coberGtoMed").prop('disabled', false);
+                        $("#coberRepCivCat").prop('disabled', false);
+                        $("#deducDa_Mat").prop('disabled', false);
+                        $("#deducRobTot").prop('disabled', false);
+                        $("#sumAsegFija").prop('disabled', false);
+                        $("#vehSus").prop('disabled', false);
+                        $("#asistenciaViaje").prop('disabled', false);
+                        $("#vehSus").prop('disabled', false);
+                        $("#coberRepCivCat").prop('disabled', false);
+                        $('#PolObligatoria').val("N");
+                        $('#TieneExencionDeducible').bootstrapSwitch('readonly', false);
+                    }
+                },
+                error: function (e) {
+                    ShowAlertWindow("Error al procesar su solicitud intente de nuevo", 'Error...');
+                }
+            });
+        });
+
+
+        // Función para busqueda de Vehiculos
+        SearchCar = function () {
+            ShowDataInfo('Consulta de Vehículos', '@Url.Action("SearchCar", "General")', { ctrlModelID: 'txtModelo', ctrlDescModel: 'txtDescripcionTipo', ctrlSpecific: 'txtTipoEspecifico' });
+        }
+
+        // Llama al método para validar el nro de serie
+        $('#numeroSerie').on("change", function () {
+            var data = {
+                subID: $("#ddlSubRamoA").val(),
+                modID: $("#txtModelo").val(),
+                year: $("#ddlYears").val(),
+                serie: $('#numeroSerie').val()
+            };
+            $.get('@Url.Action("ValidaSerie", "General")', data, function (result) {
+                $("#EsSerieCorrecta").bootstrapSwitch("readonly", false);
+                if (result == "OK") {
+                    $('#EsSerieCorrecta').bootstrapSwitch('state', true);
+                }
+                else {
+                    $("#EsSerieCorrecta").bootstrapSwitch("state", false);
+                    ShowAlertWindow(result, "Validar Serie");
+                }
+                $("#EsSerieCorrecta").bootstrapSwitch("readonly", true);
+            });
+        });
+
+        // Función para buscar los años del modelo
+        SearchYears = function (modID) {
+            // Busco los años del modelo
+            $("#ddlYears").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetYearsForModel", "General")',
+                dataType: 'json',
+                data: { modeloID: modID },
+                success: function (arrYears) {
+                    var items = '<option>Año (Modelo)</option>';
+                    $.each(arrYears, function (i, arrYears) {
+                        items += '<option value="' + arrYears + '">' + arrYears + '</option>';
+                    });
+                    $('#ddlYears').html(items);
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando los años del modelo" + ex, "Vehículo");
+                }
+            });
+        }
+
+        $("#txtModelo").on("change", function () {
+            var modID = $("#txtModelo").val();
+            $.get('@Url.Action("SearchModelo", "General")', { id: modID }, function (result) {
+                if (result != "") {
+                    $('#txtDescripcionTipo').val(result);
+                    $('#txtTipoEspecifico').val(result);
+
+                    // Busco los años del modelo
+
+                    var id = $("#ddlSubRamoA" + " option:selected").val();
+                    if (id != "L") {
+                        SearchYears(modID);
+                    }
+                }
+                else
+                    ShowAlertWindow("El modelo no se encuentra en la lista. Por favor verifíque", "Vehículo");
+            });
+        });
+
+        // Oculto los combos de cascada
+        $("#dvCascadingM").hide();
+        $("#dvCascadingS").hide();
+        $("#dvCascadingT").hide();
+
+        $("#ddlSubRamoA").change(function () {
+            var id = $("#ddlSubRamoA" + " option:selected").val();
+            if (id == "L") {
+                // Muestro los combos de cascada
+                $("#dvCascadingM").show();
+                $("#dvCascadingS").show();
+                $("#dvCascadingT").show();
+            }
+            else {
+                // Oculto los combos de cascada
+                $("#dvCascadingM").hide();
+                $("#dvCascadingS").hide();
+                $("#dvCascadingT").hide();
+            }
+
+            // Configuro los combos de Años y Marcas
+            $("#ddlYears").empty();
+            $("#ddlMarcas").empty();
+            $("#ddlSubMarcas").empty();
+            $("#ddlTipos").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenAños", "Cotizacion")',
+                dataType: 'json',
+                data: { SubRamo: id },
+                success: function (arrYears) {
+                    var items = '<option>Año (Modelo))</option>';
+                    $.each(arrYears, function (i, arrYears) {
+                        items += '<option value="' + arrYears + '">' + arrYears + '</option>';
+                    });
+                    $('#ddlYears').html(items);
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando los años del sub ramo" + ex, "Vehículo");
+                }
+            });
+        });
+
+        $("#ddlYears").change(function () {
+            $("#ddlMarcas").empty();
+            $("#ddlSubMarcas").empty();
+            $("#ddlTipos").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenMarcaVehi", "Cotizacion")',
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val(), straño: $("#ddlYears").val() },
+                success: function (marcas) {
+                    var items = '';
+                    $.each(marcas, function (i, marcas) {
+                        items += '<option value="' + marcas.Value + '">' + marcas.Text + '</option>';
+                    });
+                    $('#ddlMarcas').html(items);
+                    var id = $("#ddlSubRamoA" + " option:selected").val();
+                    if (id == "L") {
+                        $("#ddlMarcas").change();
+                        //$("#ddlSubMarcas").change();
+                        //$("#ddlTipos").change();
+                    }
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando las marcas por año" + ex, "Vehículo");
+                }
+            });
+        });
+
+        $("#ddlMarcas").change(function () {
+            $("#ddlSubMarcas").empty();
+            $("#ddlTipos").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenSubMarcaVehi", "Cotizacion")',
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val(), straño: $("#ddlYears").val(), nMarcaId: $("#ddlMarcas").val() },
+                success: function (subMarcas) {
+                    var items = '';
+                    $.each(subMarcas, function (i, subMarcas) {
+                        items += '<option value="' + subMarcas.Value + '">' + subMarcas.Text + '</option>';
+                    });
+                    $('#ddlSubMarcas').html(items);
+                    var id = $("#ddlSubRamoA" + " option:selected").val();
+                    if (id == "L") {
+                        //$("#ddlMarcas").change();
+                        $("#ddlSubMarcas").change();
+                        //$("#ddlTipos").change();
+                    }
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando las sub-marcas de la marca" + ex, "Vehículo");
+                }
+            });
+        });
+
+        $("#ddlSubMarcas").change(function () {
+            $("#ddlTipos").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenTipoVehi", "Cotizacion")',
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val(),
+                    straño: $("#ddlYears").val(),
+                    nMarcaId: $("#ddlMarcas").val(),
+                    SubMarca: jQuery.trim($("#ddlSubMarcas" + " option:selected").val()),
+                    Marca: jQuery.trim($("#ddlMarcas" + " option:selected")[0].innerHTML)
+                },
+                success: function (tipoVehiculo) {
+                    var items = '<option>Tipo</option>';
+                    $.each(tipoVehiculo, function (i, tipoVehiculo) {
+                        items += '<option value="' + tipoVehiculo.Value + '">' + tipoVehiculo.Text + '</option>';
+                    });
+                    $('#ddlTipos').html(items);
+
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando los tipos de vehículos de la sub-marca" + ex, "Vehículo");
+                }
+            });
+            return false;
+        });
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+
+        /*----------------------------------------------------------------------------*/
+        /*     muestra ventana con datos                                              */
+        /*----------------------------------------------------------------------------*/
+        var idSbRm = $("#ddlSubRamoA" + " option:selected").val();
+        if (idSbRm == "L") {
+            $("#ddlYears").change();
+            //$("#ddlSubMarcas").change();
+            //$("#ddlTipos").change();
+            //* Muestro los combos de cascada
+            $("#dvCascadingM").show();
+            $("#dvCascadingS").show();
+            $("#dvCascadingT").show();
+        }
+        else {
+            // Oculto los combos de cascada
+            $("#dvCascadingM").hide();
+            $("#dvCascadingS").hide();
+            $("#dvCascadingT").hide();
+        }
+    });
+</script>

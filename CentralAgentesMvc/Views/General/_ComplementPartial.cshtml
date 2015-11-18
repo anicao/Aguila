@@ -1,0 +1,52 @@
+﻿@model CentralAgentesMvc.Models.GenericoViewModel
+
+<div id="fsComplemento" style="padding-right: 10px;">
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Compañia anterior:</strong></span>
+        @Html.TextBoxFor(m => m.complemento.NombreCompañia, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Que busca el cliente:</strong></span>
+        @Html.TextBoxFor(m => m.complemento.DescripcionInteres, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Que recuerda de la publicidad:</strong></span>
+        @Html.TextBoxFor(m => m.complemento.DescripcionGusto, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Observaciones:</strong></span>
+        @Html.TextBoxFor(m => m.complemento.utimasObserv, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Fecha de proxima llamada:</span>
+        @Html.TextBoxFor(m => m.complemento.proximaLlamada, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">De donde llama el cliente:</span>
+        @Html.TextBoxFor(m => m.complemento.telefono, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Ejecutivo responsable:</span>
+        @Html.TextBoxFor(m => m.complemento.EjecutivoResponsable, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Estatus de la cotización:</span>
+        @Html.TextBoxFor(m => m.complemento.DescripcionEstatus, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Recomienda:</span>
+        @Html.TextBoxFor(m => m.recomienda, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Precio Aguila</strong></span>
+        @Html.TextBoxFor(m => m.complemento.precioAguila,
+                                String.Format("{0:C2}", Model.complemento.precioAguila)
+                                , new { @class = "form-control readOnlyWhite"
+                                      , @readonly = "readonly"
+                                      , @id = "precioAguila" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Precio Competencia:</span>
+        @Html.TextBoxFor(m => m.complemento.preciocompet, String.Format("{0:C2}", Model.complemento.preciocompet), new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+</div>

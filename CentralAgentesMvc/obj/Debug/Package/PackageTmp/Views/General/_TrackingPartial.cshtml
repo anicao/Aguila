@@ -1,0 +1,41 @@
+﻿@model CentralAgentesMvc.Models.GenericoViewModel
+
+<div id="fsTracking" style="padding-right: 10px;">
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Fecha última llamada:</span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.FUltLlamada, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Fecha proxima llamada:</span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.FProxLlamada, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Hora:</span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.Hora, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Número de llamadas:</strong></span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.NumLlamadas, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Observaciones últimas llamadas:</strong></span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.ObsUltLlamada, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Observaciones generales:</strong></span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.ObsGenerales, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Observaciones facturación:</strong></span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.ObsFacturacion, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Ejecutivo responsable:</span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.Ejecti, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Estatus de seguimiento:</span>
+        @Html.TextBoxFor(m => m.SeguimientoPol.Estatus, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+
+</div>

@@ -1,0 +1,157 @@
+﻿@model CentralAgentesMvc.Models.ResumenCotizar
+
+<div class="row clearfix" style="margin-top: 3px; margin-left: -14px;">
+    <div class="col-xs-12 column">
+        <table id="tblDesglosePago"
+                data-height="220"
+                data-striped="true"
+                data-cache="false"
+                data-resizable="true"
+                data-classes="table table-hover table-bordered table-condensed miniText">
+            <thead>
+                <tr>
+                    <th data-field="tpoEspecifAuto"  data-width="300" data-align="left"  data-valign="middle">Descripción</th>
+                    <th data-field="mSUVA"           data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">S.U.V.A</th>
+                    <th data-field="mRespCivil"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Resp. Civil</th>
+                    <th data-field="mAyDLegal"       data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">A. y D. Legal</th>
+                    <th data-field="mDañosMateria"   data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Daños Mat.</th>
+                    <th data-field="mRoboTot"        data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Robo Total</th>
+                    <th data-field="mEquiEspec"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Eq. Especial</th>
+                    <th data-field="mAsisViaje"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Asist. Viaje</th>
+                    <th data-field="mVehiSustitu"    data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Veh. Sustituto</th>
+                    <th data-field="mTotCoberturas"  data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Total Cobertura</th>
+                    <th data-field="mSA"             data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">S.A</th>
+                    <th data-field="mDMMonto"        data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">D.M. Monto</th>
+                    <th data-field="mSubtotal"       data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Monto Vehiculo</th>
+                    <th data-field="mPagoInicial"    data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Pago Inicial</th>
+                    <th data-field="mPagSubsecuente" data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Pagos Subsecuentes</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="col-xs-4 column" style="padding-right: 1px; padding-top: 10px">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Derecho de  Póliza:</span>
+            @Html.TextBoxFor(m => m.DerechoPoliza, String.Format("{0:C2}", Model.DerechoPoliza), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Extensión RC:</span>
+            @Html.TextBoxFor(m => m.ExtensionRC, String.Format("{0:C2}", Model.ExtensionRC), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Accid. Personales:</span>
+            @Html.TextBoxFor(m => m.AccidentesPersonales, String.Format("{0:C2}", Model.AccidentesPersonales), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Recargos:</span>
+            @Html.TextBoxFor(m => m.Recargos, String.Format("{0:C2}", Model.Recargos), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Sub Total:</span>
+            @Html.TextBoxFor(m => m.SubTotal, String.Format("{0:C2}", Model.SubTotal), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">I.V.A:</span>
+            @Html.TextBoxFor(m => m.PorcentajeIVA, String.Format("{0:C2}", Model.PorcentajeIVA), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">TOTAL:</span>
+            @Html.TextBoxFor(m => m.TotalCotizacion, String.Format("{0:C2}", Model.TotalCotizacion), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <br />
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">1 Pago de:</span>
+            @Html.TextBoxFor(m => m.mPago1de, String.Format("{0:C2}", Model.mPago1de), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span id="spTtlDsc2" class="input-group-addon left-data">@Html.DisplayFor(m => m.Descripcion2Pago)</span>
+            @Html.TextBoxFor(m => m.mPago2de, String.Format("{0:C2}", Model.mPago2de), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>
+
+    <div class="col-xs-8 column" style="padding-right: 1px; padding-top: 10px;">
+        Para ceder comisión es necesario calcular la cotización, favor de dar click en el botón  cotizar
+        <div id="CedeComision" class="col-xs-4 column" style="padding-right: 1px; padding-top: 10px; display:none">
+            @{
+                if (Session["UserRol"] != null)
+                {
+                    if (Session["UserRol"].ToString() != "A")
+                    {
+                        @Html.CheckBoxFor(m => m.QuiereCederComision, new { @class = "checkbox-sm", 
+                        id = "QuiereCederComision" }) 
+                        @Html.Label("  Cede comisión  ") 
+                        @Html.DisplayFor(m => m.strchkCedeComision)
+                        @Html.DropDownListFor(m => m.porcentajeCede, new SelectList(Model.PorcentajeComisionSource, "Key", "Value", 0), new
+                        {
+                        @class = "form-control input-sm",
+                        id = "porcentajecomision",
+                        style = "display:none"
+                        })
+                    }
+                }
+            }
+        </div>
+     </div>
+
+    @Html.HiddenFor(m => m.TotalCotizacion, new { value = Model.TotalCotizacion, @id="ElTotalCtz" })
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () { 
+        
+    if($('#CedeComision').css('display') != 'none'){
+        $('#CedeComision').show();
+    }
+
+    if($('#QuiereCederComision').is(":checked")) {
+       $('#porcentajecomision').show();  
+        }
+        else{        
+        $('#porcentajecomision').hide();  
+        }    
+        
+        // Setear click de las tablas
+        SetHighLightClickInTables('tblDesglosePago');
+
+        // Setear los datos en las tablas
+        SetDataInTables('tblDesglosePago', @Html.Raw(Json.Encode(Model.VehiculosInfo)));
+
+        $("#porcentajecomision").change(function () {
+        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenCedeComision", "General")', // we are calling json method                
+                data: { cede: $("#QuiereCederComision").val(), porcentaje: $("#porcentajecomision").val()},
+                // here we are get value of selected country and passing same value
+                //as inputto json method GetStates.
+                success: function (subMarcas) {
+                },
+                error: function (ex) {
+                    alert('Error en cargar datos.' + ex);
+                }
+            });
+            RefreshCalculoCedeComision();
+        });
+           
+        $("#QuiereCederComision").change(function() {
+        if($(this).is(":checked")) {
+        $('#porcentajecomision').show();
+        }
+        else{
+        $('#porcentajecomision').hide();
+        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenRegresaComision", "General")', // we are calling json method 
+                success: function (subMarcas) {
+                RefreshCalculoCotizacion();
+                },
+                error: function (ex) {
+                    alert('Error en cargar datos.' + ex);
+                }
+            });
+            $('#QuiereCederComision').prop('checked', value == 1);
+            $('#CedeComision').hide();
+        }
+    });
+    });
+</script>

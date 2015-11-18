@@ -1,0 +1,91 @@
+﻿@model CentralAgentesMvc.Models.ReportViewModel
+
+<div>
+    @using (Html.BeginForm("Agentes", "Reports", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        if (Session["UserRol"].ToString() == "A")
+        {
+            <div class="form-group" style="margin-bottom: 1px;">
+                @Html.LabelFor(m => m.AgenteID, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.AgenteID, new { @class = "form-control", @placeholder = "agente", autocomplete = "off", value = Model.AgenteID, id = "AgenteAID" })
+                    @Html.ValidationMessageFor(m => m.AgenteID)
+                </div>
+                <div class="col-md-7">
+                    @Html.DropDownListFor(m => m.AgenteID, new SelectList(Model.AgentesSource, "lngAgente", "strNombre", 1), new { @class = "form-control", id = "ddlAgentesA" })
+                    @Html.ValidationMessageFor(m => m.AgenteID)
+                </div>
+            </div>
+        }
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.LabelFor(m => m.FechaDesde, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+            <div id="dvDesdeA" class="col-md-9">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.FechaDesde, new { @class = "form-control", @maxlength = "10", @placeholder = "Fecha Inicio", value = Model.FechaDesde, id = "fDesdeA" })
+                    <span class="btn btn-default input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.LabelFor(m => m.FechaHasta, new { @class = "col-md-3 control-label", style = "text-align: left;" })
+            <div id="dvHastaA" class="col-md-9">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.FechaHasta, new { @class = "form-control", @maxlength = "10", @placeholder = "Fecha Final", value = Model.FechaHasta, id = "fHastaA" })
+                    <span class="btn btn-default input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+  
+        @Html.HiddenFor(m => m.ReportName, new { value = Model.ReportName })
+        @Html.HiddenFor(m => m.AgenteName, new { value = Model.AgenteName, id = "AgNameA" })        
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ConfigSearchControls('dvDesdeA', 'dvHastaA', 'AgenteAID', 'ddlAgentesA', 'AgNameA');
+
+        // Función para disparar los reportes de agentes
+        GeneraReportesAgentes = function () {
+            var fIni = $("#fDesdeA").val();
+            var fFin = $("#fHastaA").val();
+            var rptN = $("#ReportName").val();
+            var agID = $("#AgenteAID").val();
+            var agNm = $("#AgNameA").val();
+            if (agID == undefined) {
+                agID = '@Model.AgenteID';
+            }
+
+            if (fIni.length > 0 && fFin.length > 0) {
+                var viewer = '@Url.Content("~/AspNetForms/ReportViewer.aspx")';
+
+                if (rptN == "Liquidaciones") {
+//                    var url1 = viewer + "?REPORT=" + rptN + "&INICIO=" + fIni + "&FIN=" + fFin + "&AGENTE=" + agID + "&L=1";
+//                    window.open(url1, "rptWindowL1", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+
+//                    var url2 = viewer + "?REPORT=" + rptN + "&INICIO=" + fIni + "&FIN=" + fFin + "&AGENTE=" + agID + "&L=2";
+//                    window.open(url2, "rptWindowL2", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+
+                    var url3 = viewer + "?REPORT=" + rptN + "&INICIO=" + fIni + "&FIN=" + fFin + "&AGENTE=" + agID + "&L=3";
+                    window.open(url3, "rptWindowL3", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+                }
+                else {
+                    var url = viewer + "?REPORT=" + rptN + "&INICIO=" + fIni + "&FIN=" + fFin + "&AGENTE=" + agID + "&N=" + agNm;
+                    window.open(url, "rptWindow", "resizable=1, status=1, scrollbars=1; height:100%; width:100%;");
+                }
+            }
+            else {
+                ShowAlertWindow("Debe indicar los parámetros de la consulta", "Validaciones");
+            }
+        };
+
+    });
+</script>

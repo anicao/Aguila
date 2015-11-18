@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Aguila - Cotizador en Línea</title>
+
+    <link href="@Url.Content("~/favicon.ico")" type="image/x-icon" rel="shortcut icon" />
+
+    <link href="~/Content/bootstrap/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssExternal")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrapEx")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqplot")
+    @Scripts.Render("~/bundles/elaguila")
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid" style="background: #0B3D70; padding-left: 0px;">
+            <div class="navbar-header">
+                <section id="header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nvMenu">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <img alt="" src="~/Content/images/header1.jpg"/>
+                </section>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="nvMenu">
+                <div class="btn-group pull-right dropdown" style="padding-top: 10px;">
+                    <input type="button" class="invoice img-spanish" />
+                    <input type="button" class="invoice img-english" />
+                      <div style="float: right; color: white; position: absolute; width: 400px; right: 24%; top: 30%;">
+            <p class="pull text-center">
+                Copyright © 2015. El Aguila Compañia de Seguros
+            </p>
+        </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    <div id="mainContainer" class="container-fluid margin-top">
+        @RenderBody()
+    </div>
+
+   @* <div class="footerExt" id="footer">
+        @Html.Partial("_ExternalFooter") 
+    </div>*@
+</body>
+</html>
+@RenderSection("scripts", required: false)
+
+<script type="text/javascript">
+    // Disable caching of AJAX responses 
+    $.ajaxSetup({ cache: false });
+    $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    $.blockUI.defaults.message = '<h4><i class="fa fa-spinner fa-2x fa-pulse"></i>&nbsp;&nbsp;&nbsp;Espere por favor</h4>';
+
+    // Configuración de los switch
+    $.fn.bootstrapSwitch.defaults.size = 'mini';
+    $.fn.bootstrapSwitch.defaults.onColor = 'primary';
+    $.fn.bootstrapSwitch.defaults.offColor = 'warning';
+
+    $(window).on('load', function () {
+        
+        //$.ajax({ url: '@Url.Action("Login", "Account")', data: { returnUrl: window.location.href} });
+    });
+
+    $(window).unload(function () {
+        //$.ajax({ type: "POST", url: '@Url.Action("LogOff", "Account")' });
+    });
+
+    var uAg = navigator.userAgent.toLowerCase();
+    var isMobile = !!uAg.match(/android|iphone|ipad|ipod|blackberry|symbianos/i);
+
+    if (isMobile)
+        $('#footer').hide();
+</script>

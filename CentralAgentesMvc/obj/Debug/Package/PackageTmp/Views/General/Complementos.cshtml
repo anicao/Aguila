@@ -1,0 +1,139 @@
+﻿@model CentralAgentesMvc.Models.ComplementoModel
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateComplemento", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id="frmComplement"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Compañia Anterior:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.DropDownListFor(m => m.compañia, new SelectList(Model.CompañiaAnteriorSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Que es lo que busca:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.DropDownListFor(m => m.interes, new SelectList(Model.InteresesSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Que recuerda de la publicidad:", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.DropDownListFor(m => m.gustoPubli, new SelectList(Model.PublicidadSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>        
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="fa fa-list fa-lg"></span>&nbsp;Resumen de Cotización</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Observaciones:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextAreaFor(m => m.utimasObserv, new { @rows = 3,
+                                                                     @class = "form-control input-sm uppercase",
+                                                                     @placeholder = "Observaciones",
+                                                                     value = Model.utimasObserv })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Recomienda:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextBoxFor(m => m.PersonaQueRecomienda, new { @class = "form-control input-sm uppercase",
+                                                                            @placeholder = "Recomienda",
+                                                                            value = Model.PersonaQueRecomienda })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Teléfono de donde llama:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextBoxFor(m => m.telefono, new { @class = "form-control input-sm",
+                                                                @placeholder = "Teléfono",
+                                                                value = Model.telefono,
+                                                                @id = "telefonoC" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Proxima llamada:", new { @class = "col-xs-3 control-label-sm" })
+                    <div id="dvProxCall" class="col-xs-4">
+                        <div class="input-group date">
+                            @Html.TextBoxFor(m => m.proximaLlamada, new { @class = "form-control input-sm"
+                                                                        , @maxlength = "10"
+                                                                        , @placeholder = "Proxima llamada"
+                                                                        , value = Model.proximaLlamada })
+                            <span class="btn btn-default input-sm input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Ejecutivo Responsable:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-9">
+                        @Html.DropDownListFor(m => m.Responsable, new SelectList(Model.ResponsableSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Estatus de Cotización:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-9">
+                        @Html.DropDownListFor(m => m.Estatus, new SelectList(Model.EstatusSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+                        @Html.ValidationMessageFor(m => m.Estatus)
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Precio Águila:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="form-validator col-xs-3">
+                        @Html.TextBoxFor(m => m.precioAguila, new { @class = "form-control input-sm text-right", @placeholder = "Precio Águila", value = Model.precioAguila })
+                    </div>
+
+                    @Html.Label("Precio Competencia:", new { @class = "col-xs-3 control-label-sm text-right"})
+                    <div class="form-validator col-xs-3">
+                        @Html.TextBoxFor(m => m.preciocompet, new { @class = "form-control input-sm text-right", @placeholder = "Precio Competencia", value = Model.preciocompet })
+                    </div>
+                </div>
+            </div>
+        </div>        
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        $("#dvProxCall .input-group.date").datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "es",
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        ValidaNumero("telefonoC");
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+    });
+</script>

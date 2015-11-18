@@ -1,0 +1,161 @@
+﻿@model CentralAgentesMvc.Models.ResumenCotizar
+
+@{
+    ViewBag.Title = "Cotizar";
+}
+<div class="row" style="margin: -10px">
+
+@if (TempData["CotExp"] == "Ex")
+{
+        <div class="col-md-8 column" style="padding-left: 1px;">        
+        <div class="col-xs-12 column">
+            <div class="well well-xs" style="padding:5px;">
+                <h4 style="text-align:center;">Opciones de Forma de Pago</h4>
+                <hr />
+                <div style="height: 200px;">
+                    <table id="tblDetPag"
+                           data-striped="true"
+                           data-cache="false"
+                           data-show-header="true"
+                           data-classes="table table-hover table-bordered table-condensed smallText">
+                        <thead>
+                            <tr>
+                                <th data-field="DescripcionRubro" data-width="300" data-align="left" data-valign="middle"></th>
+                                <th data-field="PagoContado"      data-width="80" data-align="right" data-valign="middle">Contado</th>
+                                <th data-field="PagoSemestral"    data-width="80" data-align="right" data-valign="middle">Semestral</th>
+                                <th data-field="PagoTrimestral"   data-width="80" data-align="right" data-valign="middle">Trimestral</th>
+                                <th data-field="PagoMensual"      data-width="80" data-align="right" data-valign="middle">Mensual</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="col-xs-4 column">
+        <div class="well well-xs" style="padding:5px;">
+            <h4 style="text-align:center;">Resumen</h4>
+            <hr />
+            <div id="fsResumen" style="height:500px;">
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">Derecho de  Póliza:</span>
+                    @Html.TextBoxFor(m => m.DerechoPoliza, String.Format("{0:C2}", Model.DerechoPoliza), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">Extensión RC:</span>
+                    @Html.TextBoxFor(m => m.ExtensionRC, String.Format("{0:C2}", Model.ExtensionRC), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">Accid. Personales:</span>
+                    @Html.TextBoxFor(m => m.AccidentesPersonales, String.Format("{0:C2}", Model.AccidentesPersonales), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">Recargos:</span>
+                    @Html.TextBoxFor(m => m.Recargos, String.Format("{0:C2}", Model.Recargos), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">Sub Total:</span>
+                    @Html.TextBoxFor(m => m.SubTotal, String.Format("{0:C2}", Model.SubTotal), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">I.V.A:</span>
+                    @Html.TextBoxFor(m => m.PorcentajeIVA, String.Format("{0:C2}", Model.PorcentajeIVA), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+                <div class="col-xs-12 input-group input-group-sm">
+                    <span class="input-group-addon left-data">TOTAL:</span>
+                    @Html.TextBoxFor(m => m.TotalCotizacion, String.Format("{0:C2}", Model.TotalCotizacion), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 column" style="padding-left: 1px;">
+        <div class="col-xs-12 column">
+            <div class="well well-xs" style="padding:5px;">
+                <h4 style="text-align:center;">Detalle</h4>
+                <hr />
+                <div style="height: 200px;">
+                    <table id="tblDesglosePago"
+                           data-height="160"
+                           data-striped="true"
+                           data-cache="false"
+                           data-classes="table table-hover table-bordered table-condensed smallText"
+                           data-id-field='nPoliza'
+                           data-click-to-select="true"
+                           data-select-item-name="nPoliza">
+                        <thead>
+                            <tr>
+                                <th data-field="tpoEspecifAuto"  data-width="300" data-align="left"  data-valign="middle">Descripción</th>
+                                <th data-field="mSUVA"           data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">S.U.V.A</th>
+                                <th data-field="mRespCivil"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Resp. Civil</th>
+                                <th data-field="mAyDLegal"       data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">A. y D. Legal</th>
+                                <th data-field="mDañosMateria"   data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Daños Mat.</th>
+                                <th data-field="mRoboTot"        data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Robo Total</th>
+                                <th data-field="mEquiEspec"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Eq. Especial</th>
+                                <th data-field="mAsisViaje"      data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Asist. Viaje</th>
+                                <th data-field="mVehiSustitu"    data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Veh. Sustituto</th>
+                                <th data-field="mTotCoberturas"  data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Total Cobertura</th>
+                                <th data-field="mSA"             data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">S.A</th>
+                                <th data-field="mDMMonto"        data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">D.M. Monto</th>
+                                <th data-field="mSubtotal"       data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Monto Vehiculo</th>
+                                <th data-field="mPagoInicial"    data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Pago Inicial</th>
+                                <th data-field="mPagSubsecuente" data-width="100" data-align="right" data-valign="middle" data-formatter="moneyFormatter">Pagos Subsecuentes</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 column">
+            <div class="well well-xs" style="padding:5px;">
+                <h4 style="text-align:center;">Opciones de Forma de Pago</h4>
+                <hr />
+                <div style="height: 200px;">
+                    <table id="tblDetPag"
+                           data-height="160"
+                           data-striped="true"
+                           data-cache="false"
+                           data-show-header="true"
+                           data-classes="table table-hover table-bordered table-condensed smallText"
+                           data-click-to-select="true">
+                        <thead>
+                            <tr>
+                                <th data-field="DescripcionRubro" data-width="300" data-align="left" data-valign="middle"></th>
+                                <th data-field="PagoContado"      data-width="80" data-align="right" data-valign="middle">Contado</th>
+                                <th data-field="PagoSemestral"    data-width="80" data-align="right" data-valign="middle">Semestral</th>
+                                <th data-field="PagoTrimestral"   data-width="80" data-align="right" data-valign="middle">Trimestral</th>
+                                <th data-field="PagoMensual"      data-width="80" data-align="right" data-valign="middle">Mensual</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Detalle de Vehiculos
+        $('#tblDesglosePago').bootstrapTable();
+        $('#tblDesglosePago').on('click', 'tbody tr', function (event) {
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+        });
+
+        var listaVD = @Html.Raw(Json.Encode(Model.VehiculosInfo));
+        $('#tblDesglosePago').bootstrapTable('load', listaVD);
+
+        // Opciones de pago
+        $('#tblDetPag').bootstrapTable();
+        $('#tblDetPag').on('click', 'tbody tr', function (event) {
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+        });
+
+        var listaP = @Html.Raw(Json.Encode(Model.OpcionesPagoInfo));
+        $('#tblDetPag').bootstrapTable('load', listaP);
+    });
+</script>

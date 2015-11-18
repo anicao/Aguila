@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CentralAgentesMvc.Models.SiniestroModel>
+
+<table class="table table-hover table-bordered table-condensed table-striped smallText tableServOnline" cellspacing="0" id="tblSiniestrosSL">
+    <thead>
+    <tr>
+        <th style="width:10%;" >
+            @Html.DisplayNameFor(model => model.fecha)
+        </th>
+        <th style="width:20%;">
+            @Html.DisplayNameFor(model => model.tipoSiniestro)
+        </th>
+         <th style="width:25%;">
+            @Html.DisplayNameFor(model => model.auto)
+        </th>
+        <th style="width:30%;">
+            @Html.DisplayNameFor(model => model.chofer)
+        </th>  
+        <th class="text-center" style="width:10%;">
+            @Html.DisplayNameFor(model => model.detalle)
+        </th>
+      
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tipoSiniestro)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.auto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.chofer)
+        </td>        
+        <td class="text-center">
+            <img src="@Url.Content("~/Content/images/android-l-etched-icon.png")" style='width: 30%; cursor:pointer;' onclick="siniestro.detalle(@Html.ValueFor(modelItem =>item.siniestroId))"/>
+        </td>
+    </tr>
+}
+</tbody>
+</table>

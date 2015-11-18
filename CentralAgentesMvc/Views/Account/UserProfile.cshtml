@@ -1,0 +1,72 @@
+﻿@model CentralAgentesMvc.Models.UserProfileViewModel
+
+@{
+    ViewBag.Title = "User Profile";
+}
+
+<div style="margin: -5px;">
+    @using (Html.BeginForm("UserProfile", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmUserData" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <h5>Datos Generales</h5>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Agente:</strong></span>
+                @Html.TextBoxFor(m => m.AgenteName, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Credencial:</strong></span>
+                @Html.TextBoxFor(m => m.Credencial, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Email:</strong></span>
+                <div class="form-validator">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-sm", @placeholder = "@mail" })
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+            </div>
+        </fieldset>
+        
+        <fieldset>
+            <h5>Cambio de Contraseña</h5>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Contraseña Actual:</strong></span>
+                <div class="form-validator">
+                    @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control input-sm", @placeholder = "Contraseña Actual", value = Model.OldPassword })
+                    @Html.ValidationMessageFor(m => m.OldPassword)
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Nueva Contraseña:</strong></span>
+                <div class="form-validator">
+                    @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control input-sm", @placeholder = "Nueva Contraseña", value = Model.PasswordHash })
+                    @Html.ValidationMessageFor(m => m.PasswordHash)
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Confirme Contraseña:</strong></span>
+                <div class="form-validator">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control input-sm", @placeholder = "Confirme Contraseña", value = Model.ConfirmPassword })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Ingrese Código de la Imagen:</strong></span>
+                <div class="form-validator">
+                    <div style="float: left;">
+                        <img id="CaptchaImg" src="@Url.Action("ShowCaptchaImage", "Cotizacion", new { random = Guid.NewGuid().ToString() })" alt="" />&nbsp;&nbsp;
+                    </div>
+                    <div style="float: left;">
+                        <img alt="" src="" class="invoice img_refresh" id="refresh" onclick="RecargaCaptcha('@Url.Action("ShowCaptchaImage", "Cotizacion")');" />
+                    </div>
+                    @Html.TextBoxFor(m => m.CaptchaText, new { @class = "form-control input-sm" })
+                </div>
+            </div>
+        </fieldset>
+                
+        @Html.HiddenFor(m => m.AgenteID, new { value = Model.AgenteID })
+        @Html.HiddenFor(m => m.ActualPassword, new { value = Model.ActualPassword })
+    }
+</div>

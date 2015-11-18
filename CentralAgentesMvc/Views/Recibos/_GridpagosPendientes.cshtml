@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CentralAgentesMvc.Models.PagosModel>
+
+<table class="table table-hover table-bordered table-condensed table-striped smallText tableServOnline" id="tblPendientesPagoSL">
+<thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.endoso)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.recibo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.vigenciaInicio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.vigenciafin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.total)
+        </th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.endoso)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.recibo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vigenciaInicio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vigenciafin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.total)
+        </td>
+        
+    </tr>
+   
+}
+ </tbody>
+</table>

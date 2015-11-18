@@ -1,0 +1,100 @@
+﻿@model IEnumerable<CentralAgentesMvc.Models.PolizaFacturacion>
+
+<table class="table table-hover table-bordered table-condensed table-striped smallText tableServOnline" id="tblFacturacionSl">
+<thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.nPoliza)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dfExpedicion)
+        </th>
+        <th style="width:26%">
+            @Html.DisplayNameFor(model => model.cNombreA)
+        </th>
+        <th style="width:6%">
+            @Html.DisplayNameFor(model => model.nEndoso)
+        </th>
+        <th style="width:6%">
+            @Html.DisplayNameFor(model => model.nRecibo)
+        </th>
+        <th style="width:9%">
+            @Html.DisplayNameFor(model => model.Fecha_Emision)
+        </th>
+        <th style="width:6%">
+            @Html.DisplayNameFor(model => model.Serie)
+        </th>
+        <th style="width:6%">
+            @Html.DisplayNameFor(model => model.Folio)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.dFIniVig)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dFFinVig)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.nPoliza)
+            <input type="hidden" value='@Html.DisplayFor(modelItem => item.dFIniVig) <label>Al</label> @Html.DisplayFor(modelItem => item.dFFinVig)' id='dates' />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dfExpedicion)
+        </td>
+        <td id="nombreAsegurado">
+            @Html.DisplayFor(modelItem => item.cNombreA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nEndoso)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nRecibo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha_Emision)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Serie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Folio)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.dFIniVig)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dFFinVig)
+        </td>
+        <td>
+            @if (item.nRecibo == 1)
+            {
+                <a class="pdf" href='@Url.Content(""+(string.IsNullOrEmpty(item.LnkPDF)? "#":item.LnkPDF))' title="Visualizar PDF">
+                    <i class="invoice img_pdf"></i>
+                </a>
+                <a class="xml" href='@Url.Content(""+(string.IsNullOrEmpty(item.LnkXML)? "#":item.LnkXML))' title="Descargar XML">
+                    <i class="invoice img_xml"></i>
+                </a>
+                <a class="100' + '@Html.DisplayFor(modelItem => item.Css100)'+ '" href='@Url.Content(""+(string.IsNullOrEmpty(item.Lnk100)? "#":"~/AspNetForms/"+item.Lnk100 ))' title="Visualizar Cobertura 100" target="_blank">
+                <i class="invoice img_sob"></i></a>
+                <a class="sob" href='@Url.Content((string.IsNullOrEmpty(item.LnkSOB)?"#":"~/AspNetForms/"+item.LnkSOB))' title="Visualizar Seguro Obligatorio" target="_blank"><i class="invoice img_sob"></i></a>
+            }
+            else {
+                <a class="pdf" href='@Url.Content("" + (string.IsNullOrEmpty(item.LnkPDF) ? "#" : item.LnkPDF))' title="Visualizar PDF"><i class="invoice img_pdf"></i></a>
+                <a class="xml" href='@Url.Content("" + (string.IsNullOrEmpty(item.LnkXML) ? "#" : item.LnkXML))' title="Descargar XML"><i class="invoice img_xml"></i></a>
+                
+            }
+                
+        </td>
+       
+    </tr>
+}
+</tbody>
+
+</table>

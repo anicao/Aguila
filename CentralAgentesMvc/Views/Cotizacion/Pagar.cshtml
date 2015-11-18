@@ -1,0 +1,64 @@
+﻿@model CentralAgentesMvc.Models.PagarModel
+@{
+    ViewBag.Title = "Datos del pago";
+}
+<div>
+<div class="well well-xs" style="padding: 5px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Importe a pagar:</span>
+            $3227.00
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Referencia para el pago:</strong></span>
+            P371615
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Nombre del Tarjetahabiente:</strong></span>
+            @Html.TextBoxFor(m => m.s, new { @class = "form-control" })
+        </div>        
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Tipo de Tarjeta:</strong></span>
+            @Html.DropDownListFor(m => m.s, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control", id = "ddlSexoA" })
+            @Html.ValidationMessageFor(m => m.s)
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Número de Tarjeta:</strong></span>
+            @Html.TextBoxFor(m => m.s, new { @class = "form-control" })
+        </div>
+         <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Número Verificador o CVV (3 números al reverso de la tarjeta):</strong></span>
+         <div class="col-md-4">
+                @Html.TextBoxFor(m => m.s, new { @class = "form-control", Id = "TxtEdad", @maxlength = "3" })
+                @Html.ValidationMessageFor(m => m.s)
+                </div>
+       </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Fecha de Expiración: (dd/mmm/aaaa) o EDAD:</span>        
+                <div id="dvFechaNac" class="col-md-8">
+                    <div class="input-group date">
+                        @Html.TextBoxFor(m => m.s, new { @class = "form-control", @maxlength = "10", placeholder = "Fecha", value = Model.s, id = "TxtFchNac" })
+                        <span class="btn btn-default input-group-addon"><span class="glyphicon glyphicon-calendar">
+                        </span></span>
+                    </div>
+                </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Sexo:</span>
+            @Html.DropDownListFor(m => m.s, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control", id = "ddlSexoA" })
+            @Html.ValidationMessageFor(m => m.s)
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Importe a pagar:</span>
+            @Html.DropDownListFor(m => m.s, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control", id = "ddlEdoCivilA" })
+            @Html.ValidationMessageFor(m => m.s)
+        </div>       
+ </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ValidaNumero('TxtEdad');
+        ValidaNumero('TxtCp');
+        ConfigExpressControls('dvFechaNac', 'TxtEdad', 'TxtFchNac');
+    });
+</script>

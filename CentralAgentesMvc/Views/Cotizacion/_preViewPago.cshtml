@@ -1,0 +1,161 @@
+﻿@model CentralAgentesMvc.Models.CotizadorExpressModel
+
+
+<div class="modal fade" id="resumenCompra">
+  <div class="modal-dialog modal-lg" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Detalles de compra</h4>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+      <div class="col-lg-12">
+        <div class="col-lg-2">
+        <img src="@Url.Content("~/Content/images/cobertura-amplia.jpg")" />
+        </div>
+        <div class="col-lg-10">
+         <div class="rightT fix_anim">
+         
+		<div class="intC1">
+			<h4>@Html.DisplayFor(m => Model.tipoPoliza)</h4>
+			<p>BENEFICIOS:</p>
+			<ul>
+				<li>@Html.DisplayFor(m =>Model.descripcionPoliza)</li>
+				<li>@Html.DisplayFor(m=> Model.roboTotal) de robo total</li>
+				<li>Gastos medicos : @Html.DisplayFor(m => Model.gastosMedicos)</li>
+				<li>Daños materiales : @Html.DisplayFor(m => Model.daniosMateriales) </li>
+				<li>Responsabilidad Civil : @Html.DisplayFor(m => Model.responCivil)</li>
+				<li>RC Catastrófica : @Html.DisplayFor(m =>Model.rcCatastrofica)</li>
+                <li>Terssa : @Html.DisplayFor(m => Model.tersa)</li>
+                <li>Cobertura 100 : @Html.DisplayFor(m => Model.cobertura100) </li>
+                <li>Auto de repuesto : @Html.DisplayFor(m => Model.autoPrestado)</li>
+				
+			</ul>
+		</div>
+	</div>
+        </div>
+      </div>
+     </div>
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-2">
+                <img src="@Url.Content("~/Content/images/datosCliente.png")" style="width:94px;"/>
+            </div>
+            <div class="col-lg-10">
+                            <h4>Tus datos de facturación</h4>
+                            <ul>
+                                <li><b>Nombre :</b>@Html.DisplayFor(m=>Model.nombre)</li>
+                                <li><b>Email :</b>@Html.DisplayFor(m=>Model.email)</li>
+                                <li><b>Teléfono :</b>@Html.DisplayFor(m=>Model.telefono)</li>
+                                <li><b>Dirección :</b> @Html.DisplayFor(m=>Model.calle), #@Html.DisplayFor(m =>Model.noExterior), Int.@Html.DisplayFor(m=>Model.noInterior)
+                                        , @Html.DisplayFor(m=>Model.colonia), @Html.DisplayFor(m=>Model.poblacion), @Html.DisplayFor(m =>Model.estado)
+                                </li>
+                                
+                                
+                            </ul>
+                        </div>
+        </div>
+        <div class="col-lg-12">      
+            <div class="col-lg-2">
+                    <img src="@Url.Content("~/Content/images/Placas.jpg")" style="width:94px;"/>
+            </div>
+            <div class="col-lg-10">
+                <h4>Datos automóvil</h4>
+                <ul>
+                    <li><b>Auto :</b>@Html.DisplayFor(m=>Model.autoMarca) @Html.DisplayFor(m => Model.autoTipo)</li>
+                    <li><b>Año :</b>@Html.DisplayFor(m=>Model.autoAnio)</li>
+                    <li><b>Placas :</b>@Html.DisplayFor(m=>Model.placas)</li>
+                    <li><b>Número de Serie :</b>@Html.DisplayFor(m=>Model.serie)</li> 
+                </ul>      
+            </div>
+            </div>
+        <div class="col-lg-12">      
+            <div class="col-lg-2">
+                    <img src="@Url.Content("~/Content/images/tarjeta-de-credito.jpg")" style="width:94px;"/>
+            </div>
+            <div class="col-lg-10">
+                <h4>Datos del pago</h4>
+                <ul>
+                    <li><b>Nombre del Tarjetahabiente :</b>@Html.DisplayFor(m=>Model.nombreTarjeta)</li>
+                    <li><b>Número de TC :</b>@Html.DisplayFor(m=>Model.numeroTarjeta)</li> 
+                    <li><b>Banco :</b>@Html.DisplayFor(m=>Model.banco)</li> 
+                    <li><b>Vigencia :</b>@Html.DisplayFor(m=>Model.vigenciaTarjeta)</li> 
+                    <li><b>Forma de pago :</b>@Html.DisplayFor(m=>Model.planPago)</li>
+                </ul>
+                <p>
+
+                <p style="float:right; color:Blue;">Monto total: @Html.DisplayFor(m => Model.montoPago)</p>
+               
+                </p>
+            </div>
+            </div>
+     </div>
+       @* <div class="row">
+            <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content text-center p-md">
+
+                            <h2><span class="text-navy">Seguro @Html.DisplayFor(m => Model.tipoPoliza)</span></h2>
+                            <p>
+                                <strong>Covertura de: </strong> 
+                                </p>
+                                 <table>
+                                    <tr>
+                                        <td>@Html.DisplayFor(m =>Model.descripciónPoliza)</td>
+                                        <td>@Html.DisplayFor(m=> Model.roboTotal) de robo total</td>
+                                        <td>Gastos medicos : @Html.DisplayFor(m => Model.gastosMedicos)</td>
+                                        
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                    <td>Daños materiales : @Html.DisplayFor(m => Model.daniosMateriales)</td>
+                                    <td>Responsab. Civil : @Html.DisplayFor(m => Model.responCivil)</td>
+                                        <td>RC Catastrófica : @Html.DisplayFor(m =>Model.rcCatastrofica)</td>
+                                    </tr>
+                                </table>
+                                                               
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Dirección de Facturación </h3>
+                      </div>
+                      <div class="panel-body">
+                        Basic panel example
+                      </div>
+                    </div>
+                   <div class="panel panel-default">
+                   <div class="panel-heading">
+                        <h3 class="panel-title">Datos Adicionales del Vehículo</h3>
+                      </div>
+                      <div class="panel-body">
+                        Basic panel example
+                      </div>
+                    </div>
+                </div>
+        </div>*@
+
+      </div>
+
+      <div class="modal-footer">
+      <div style="float:left;">
+          @Html.CheckBox("accept", new { @class = "checkbox-sm" }) &nbsp;&nbsp;He leído, entendido  y aceptado los <a href="https://elaguila.com.mx/pdf/Condiciones-Generales-El-Aguila-Compania-de-Seguros.pdf"  onclick="window.open('https://elaguila.com.mx/pdf/Condiciones-Generales-El-Aguila-Compania-de-Seguros.pdf', 'Condiciones Generales', 'toolbar=no, scrollbars=yes, resizable=yes, top=40, left=500, width=600, height=900');return false;">términos y condiciones</a> antes expuestos, así como las como las Condiciones Generales del Seguro de Automóvil 
+          <a href="https://elaguila.com.mx/Docs/2 AVISO DE PRIVACIDAD INTEGRAL.DOC">Nuestro Aviso de Privacidad Integral</a>,  
+          <a href="https://elaguila.com.mx/Docs/3 AVISO DE PRIVACIDAD para correo electronico.docx">Abandonar esta lista de correo o Ver nuestra</a>, 
+          <a href="https://elaguila.com.mx/Docs/1 AVISO DE PRIVACIDAD.DOC">política de privacidad.</a>    
+      </div> 
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button id="ExePay" type="button" class="btn btn-default btn-primary" title="Pagar" onclick="AceptaPago();" disabled>
+            <span class="fa fa-money fa-md"></span>&nbsp;&nbsp;Pagar
+            </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

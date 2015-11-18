@@ -1,0 +1,65 @@
+﻿<div id="myCarousel" class="vertical-slider carousel vertical slide well" style="height: 380px;" data-ride="carousel">
+    <div class="row">
+        <div class="col-md-4">
+            <span data-slide="next" class="btn-vertical-slider glyphicon glyphicon-circle-arrow-up" style="font-size: 30px"></span>  
+        </div>
+        <div class="col-md-8"></div>
+    </div>
+    <br />
+
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <div class="row">
+                <div class="col-xs-6 col-sm-5 col-md-5">
+                    <a href="#">
+                        <img src="~/Content/images/error.png" class="img-rounded" alt="Error" height = "150" width = "150" />
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-7 col-md-7">
+                    Cualquier duda o error que se presente por favor hacérselo llegar a su ejecutiva 
+                    de servicio indicando el número de cotización y/o renovación.  
+                </div>
+            </div>
+            <!--/row-fluid-->
+        </div>
+
+        <!--/item-->
+        <div class="item ">
+            <div class="row">
+                <div class="col-xs-6 col-sm-5 col-md-5">
+                    <a href="#">
+                        <img src="~/Content/images/web.jpg" class="img-rounded" alt="Web" height = "150" width = "150" />
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-7 col-md-7">
+                    Seguiremos agregando más funciones 
+                </div>
+            </div>
+            <!--/row-fluid-->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <span data-slide="prev" class="btn-vertical-slider glyphicon glyphicon-circle-arrow-down" style="font-size: 30px"></span>
+        </div>
+        <div class="col-md-8">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-vertical-slider').on('click', function () {
+
+            if ($(this).attr('data-slide') == 'next') {
+                $('#myCarousel').carousel('next');
+            }
+            if ($(this).attr('data-slide') == 'prev') {
+                $('#myCarousel').carousel('prev')
+            }
+
+        });
+    });
+</script>

@@ -1,0 +1,111 @@
+﻿@model Negocio.ClasesCentral.ClsTelefono
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateTelefono", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmPhone" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Lada:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cLada, new { @class = "form-control input-sm", @placeholder = "Lada", value = Model.cLada, @id = "cLada" })
+                @Html.ValidationMessageFor(m => m.cLada)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Casa:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cTel, new { @class = "form-control input-sm", @placeholder = "Casa", value = Model.cTel, @id = "cTel" })
+                @Html.ValidationMessageFor(m => m.cTel)
+            </div>
+        </div>        
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Oficina:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-6">
+                @Html.TextBoxFor(m => m.cOficina, new { @class = "form-control input-sm", @placeholder = "Oficina", value = Model.cOficina, @id = "cOficina" })
+                @Html.ValidationMessageFor(m => m.cOficina)
+            </div>
+
+            @Html.Label("Extensión:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.cExtension, new { @class = "form-control input-sm", @placeholder = "Extensión", value = Model.cExtension, @id = "cExtension" })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Celular:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cCelular, new { @class = "form-control input-sm", @placeholder = "Celular", value = Model.cCelular, @id = "cCelular" })
+                @Html.ValidationMessageFor(m => m.cCelular)
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Radio:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-6">
+                @Html.TextBoxFor(m => m.cRadio, new { @class = "form-control input-sm", @placeholder = "Radio", value = Model.cRadio, @id = "cRadio" })
+                @Html.ValidationMessageFor(m => m.cRadio)
+            </div>
+
+            @Html.Label("ID:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-2">
+                @Html.TextBoxFor(m => m.cRadioID, new { @class = "form-control input-sm", @placeholder = "Id Radio", value = Model.cRadioID, @id = "cRadioID" })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Fax:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cFax, new { @class = "form-control input-sm", @placeholder = "Fax", value = Model.cFax, @id = "cFax" })
+                @Html.ValidationMessageFor(m => m.cFax)
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Otro:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cOtro1, new { @class = "form-control input-sm", @placeholder = "Otro", value = Model.cOtro1, @id = "cOtro1" })
+                @Html.ValidationMessageFor(m => m.cOtro1)
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Historial:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextAreaFor(m => m.cHistorial, new { @rows = 3, @class = "form-control input-sm uppercase", @placeholder = "Historial", value = Model.cHistorial, @readonly="readonly" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.cTpo1, new { value = Model.cTpo1 })
+        @Html.HiddenFor(m => m.nCotizaID, new { value = Model.nCotizaID })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        // Validación de campos numericos
+        ValidaNumero("cLada");
+        ValidaNumero("cTel");
+        ValidaNumero("cOficina");
+        ValidaNumero("cExtension");
+        ValidaNumero("cCelular");
+        ValidaNumero("cRadio");
+        ValidaNumero("cRadioID");
+        ValidaNumero("cFax");
+        ValidaNumero("cOtro1");
+    });
+</script>

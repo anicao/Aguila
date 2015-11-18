@@ -1,0 +1,145 @@
+﻿@model CentralAgentesMvc.Models.SiniestroModel
+@using (Html.BeginForm()) {
+@Html.ValidationSummary(true)
+<fieldset>
+   <div class="row" style="padding:2%">
+      <div class="col-xs-2">
+         <img src="@Url.Content("~/Content/images/cobertura-amplia.jpg")" /> 
+      </div>
+      <div class="col-xs-4">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.siniestroId)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.siniestroId, new { @class = "noInput", @width = "50%", @disabled="disabled" })
+            @Html.ValidationMessageFor(model => model.siniestroId)
+         </div>
+      </div>
+      <div class="col-xs-3">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.tipoSiniestro)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.tipoSiniestro, new { @class = "noInput", @width = "50%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.tipoSiniestro)
+         </div>
+      </div>
+      <div class="col-xs-3">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.fecha)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.fecha, new { @class = "noInput", @width = "50%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.fecha)
+         </div>
+      </div>
+   </div>
+   <div class="row" style="padding:2%">
+      <div class="col-xs-2">
+         <img src="@Url.Content("~/Content/images/datosCliente.png")" style="width:80px;"/>
+      </div>
+      <div class="col-xs-10">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.chofer)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.chofer, new { @class = "noInput", @style="width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.chofer)
+         </div>
+      </div>
+   </div>
+   <div class="row" style="padding:2%">
+      <div class="col-xs-2">
+         <img src="@Url.Content("~/Content/images/Placas.jpg")" style="width:94px;"/>
+      </div>
+      <div class="col-xs-3">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.auto)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.auto, new { @class = "noInput", @width = "50%", @disabled="disabled" })
+            @Html.ValidationMessageFor(model => model.auto)
+         </div>
+      </div>
+      <div class="col-xs-3">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.Placas)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.Placas, new { @class = "noInput", @width = "50%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.Placas)
+         </div>
+      </div>
+      <div class="col-xs-3">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.NoSerie)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.NoSerie, new { @class = "noInput", @width = "50%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.NoSerie)
+         </div>
+      </div>
+   </div>
+   @if (!string.IsNullOrEmpty(Model.taller))
+   {
+   <div class="row" style="padding:2%">
+      <div class="col-xs-2">
+         <img src="@Url.Content("~/Content/images/mecanico.png")" style="width:94px;"/>
+      </div>
+      <div class="col-xs-4">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.fechaRecepcion)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.fechaRecepcion, new { @class = "noInput", @style = "width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.fechaRecepcion)
+         </div>
+      </div>
+      <div class="col-xs-4">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.promesaEntrega)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.promesaEntrega, new { @class = "noInput", @style = "width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.promesaEntrega)
+         </div>
+      </div>
+      <div class="col-xs-4">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.taller)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.taller, new { @class = "noInput", @style = "width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.taller)
+         </div>
+      </div>
+      <div class="col-xs-5">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.telefonos)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.telefonos, new { @class = "noInput", @style = "width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.telefonos)
+         </div>
+      </div>
+      <div class="col-xs-2"></div>
+      <div class="col-xs-7">
+         <div class="editor-label">
+            @Html.LabelFor(model => model.direccion)
+         </div>
+         <div class="editor-field">
+            @Html.TextBoxFor(model => model.direccion, new { @class = "noInput", @style = "width:100%", @disabled = "disabled" })
+            @Html.ValidationMessageFor(model => model.direccion)
+         </div>
+      </div>
+   </div>
+   }
+   <div class="editor-label">
+      @Html.LabelFor(model => model.detalle)
+   </div>
+   <div class="editor-field">
+      @Html.TextAreaFor(model => model.detalle, new { @class = "form-control input-sm", @width = "50%", @disabled="disabled" })
+      @Html.ValidationMessageFor(model => model.detalle)
+   </div>
+</fieldset>
+}

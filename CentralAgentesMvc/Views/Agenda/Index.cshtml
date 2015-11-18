@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PageLayout.cshtml";
+}
+<link href="../../Content/Agenda.css" rel="stylesheet" type="text/css" />
+<div id="panels">
+         <div class="row clearfix">
+		<div class="col-md-3 column">
+        <div class="panel panel-default">
+              <div class="panel-heading">Busqueda por nombre</div>
+              <div class="panel-body">
+               <div class="form-group">
+                        <label class="col-md-3 control-label" for="AgenteID" style="text-align: left;">Agente:</label>
+                        <div class="col-md-9">
+                            <div style="margin-bottom: 2px">
+                                <input autocomplete="off" class="form-control" id="nombreAgente" name="nombreAgente" placeholder="Nombre Agente" type="text">
+                                <span class="field-validation-valid" id="AgenteID_validationMessage"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-block" onclick="app.getFacturas(1, 10)">Buscar contacto</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+		   @* <div class="well well-md form-horizontal">
+                <h4>Busqueda por nombre</h4>
+                <hr />
+                <div class="form-group">
+                        <label class="col-md-3 control-label" for="AgenteID" style="text-align: left;">Agente:</label>
+                        <div class="col-md-9">
+                            <div style="margin-bottom: 2px">
+                                <input autocomplete="off" class="form-control" id="nombreAgente" name="nombreAgente" placeholder="Nombre Agente" type="text">
+                                <span class="field-validation-valid" id="AgenteID_validationMessage"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-block" onclick="app.getFacturas(1, 10)">Buscar contacto</button>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        
+        <div class="col-md-9 column">
+            <div class=" well-md">
+            <div class="row">
+                <li class="list-group-item noBorder">
+                
+                        <div class="col-xs-12 col-sm-1">
+                            <div class="circle">GP</div>
+                        </div>
+                        <div class="col-xs-12 col-sm-9">
+                            <span class="name">Glenda Patterson</span><br/>
+                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="CENTRAL {}"></span>
+                                <span class="text-muted">CENTRAL {}</span><br />
+                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(538) 718-7548"></span>
+                            <span class="text-muted">(538) 718-7548</span><br />
+                            <span class="fa fa-comments text-muted c-info" data-toggle="tooltip" title="glenda.patterson@example.com"></span>
+                            <span class="text-muted">glenda.patterson@example.com</span><br />
+                        </div>
+                        <div class="clearfix"></div>
+                      
+                    </li>
+                      </div>
+                 <li class="list-group-item noBorder">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-1">
+                            <div class="circle">JM</div>
+                        </div>
+                        <div class="col-xs-12 col-sm-9">
+                            <span class="name">Jessica Medina</span><br/>
+                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="CENTRAL {}"></span>
+                                <span class="text-muted">CENTRAL {}</span><br />
+                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(538) 718-7548"></span>
+                            <span class="text-muted">(538) 718-7548</span><br />
+                            <span class="fa fa-comments text-muted c-info" data-toggle="tooltip" title="glenda.patterson@example.com"></span>
+                            <span class="text-muted">glenda.patterson@example.com</span><br />
+                        </div>
+                        <div class="clearfix"></div>
+                        </div>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+</div>

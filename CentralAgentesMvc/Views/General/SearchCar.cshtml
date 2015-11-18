@@ -1,0 +1,188 @@
+﻿@model CentralAgentesMvc.Models.SearchViewModel
+
+<div class="row" style="margin: -15px -30px -30px -30px;">
+    <div class="col-md-12 column">
+        <div class="well well-xs col-md-12" style="padding: 5px; margin-bottom: 4px;">
+            <div class="form-group">
+                @Html.Label("Marca:", new { @class = "col-xs-2 control-label-sm" })
+                <div class="col-xs-4">
+                    @Html.DropDownListFor(m => m.MarcaID, new SelectList(Model.MarcasSource, "Value", "Text"), new { @class = "form-control input-sm", id = "ddlMarca" })
+                </div>
+
+                @Html.Label("Sub Marca:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+                <div class="col-xs-4">
+                    @Html.DropDownListFor(m => m.SubMarcaID, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", id = "ddlSubMarca" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Descripción:", new { @class = "col-xs-2 control-label-sm" })
+               <div class="col-xs-4">
+                    <div class="input-group date">
+                        @Html.TextBoxFor(m => m.SearchText, new { @class = "form-control input-sm uppercase", @placeholder = "Descripción", value = Model.SearchText })
+                        <span class="btn btn-default input-sm input-group-addon" onclick="RefreshVehiculos(1, 20);">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                </div>
+
+                @Html.Label("Modelo:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+               <div class="col-xs-4">
+                    <div class="input-group date">
+                        @Html.TextBoxFor(m => m.Modelo, new { @class = "form-control input-sm uppercase", @placeholder = "Modelo", value = Model.Modelo })
+                        <span class="btn btn-default input-sm input-group-addon" onclick="RefreshVehiculos(1, 20);">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    @Html.TextAreaFor(m => m.ModelosDisponibles, new { @rows = 2, @class = "form-control input-sm readOnlyWhite", @readonly = "readonly", @placeholder = "modelos disponibles" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 column">
+        <div class="well well-xs col-md-12" style="padding: 3px;">
+            <table id="tblCarsSearched"
+                   data-height="300"
+                   data-striped="true"
+                   data-cache="false"
+                   data-classes="table table-hover table-bordered table-condensed smallText"
+                   data-id-field='Clave' 
+                   data-side-pagination='server'
+                   data-page-list="[20]"
+                   data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-field="Clave"       data-sortable="true" data-width="100" data-align="center" data-valign="middle">Clave</th>
+                    <th data-field="Descripcion" data-sortable="true" data-width="275" data-align="left"   data-valign="middle">Descripción</th>
+                    <th data-field="Marca"       data-sortable="true" data-width="150" data-align="center" data-valign="middle">Marca</th>
+                    <th data-field="SubMarca"    data-sortable="true" data-width="150" data-align="left"   data-valign="middle">Sub Marca</th>
+                </tr>
+                </thead>
+            </table>
+
+            @Html.Hidden("HiddenID", "")
+            @Html.Hidden("HiddenDesc", "")
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Asociar la lista de vehiculos a la tabla
+        RefreshVehiculos = function (number, size) {
+            var subMkDs = "";
+
+            var ddlSubMk = $("#ddlSubMarca" + " option:selected")[0];
+            if (ddlSubMk != undefined) subMkDs = ddlSubMk.innerHTML;
+
+            var params = { searchTerm: $("#SearchText").val()
+                         , modelo: $("#Modelo").val()
+                         , marcaDsc: $("#ddlMarca" + " option:selected")[0].innerHTML
+                         , subMarkDsc: subMkDs
+                         , pageIndex: number
+            }
+
+            GetDataTable('tblCarsSearched', '@Url.Action("GetVehiculos", "General")', params);
+        };
+
+        // Cuando hacen click el una fila
+        ClickRecordCar = function (e, row, element) {
+            $('#HiddenID').val(row.Clave);
+            $('#HiddenDesc').val(row.Descripcion);
+
+            $.get('@Url.Action("GetModelosDeMarca", "General")', { modeloID: row.Clave }, function (data) {
+                if (data.length > 0) {
+                    $("#ModelosDisponibles").val(data);
+                }
+            });
+        };
+
+        // Doble click para seleccionar el registro
+        SelectedCarDblClk = function (e, row, element) {
+            if ($('#@Model.CtrlModelID') != null) {
+                $('#@Model.CtrlModelID').val(row.Clave);
+            }
+            if ($('#@Model.CtrlDescripcionModel') != null) {
+                $('#@Model.CtrlDescripcionModel').val(row.Descripcion);
+            }
+            if ($('#@Model.CtrlSpecificModel') != null) {
+                $('#@Model.CtrlSpecificModel').val(row.Descripcion);
+            }
+
+            // Busco los años del modelo
+            SearchYears(row.Clave);
+
+            $('#btnCloseSearch').click();
+        }
+
+        // Configuro la tabla
+        ConfigBootstapTable('tblCarsSearched', RefreshVehiculos, '@Url.Action("GetVehiculos", "General")', ClickRecordCar, SelectedCarDblClk);
+
+        // Configuro el combo de submarcas en función de la marca
+        $("#ddlMarca").change(function () {
+            var marcaID = $("#ddlMarca" + " option:selected").val();
+            var modelo = $("#Modelo").val();
+
+            $("#ddlSubMarca").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenSubMarcaVehi", "Cotizacion")',
+                dataType: 'json',
+                data: { subRamo: 'R', straño: modelo, nMarcaId: marcaID },
+                success: function (subMarcas) {
+                    var items = '';
+                    $.each(subMarcas, function (i, subMarcas) {
+                        items += '<option value="' + subMarcas.Value + '">' + subMarcas.Text + '</option>';
+                    });
+                    $('#ddlSubMarca').html(items);
+
+                    // Muestro la lista de vehículos
+                    RefreshVehiculos(1, 20)
+                },
+                error: function (ex) {
+                    ShowAlertWindow("Problemas recuperando las SubMarcas" + ex, "Buscar vehículo");
+                }
+            });
+        });
+
+        // Muestro los vehiculos de la submarcas
+        $("#ddlSubMarca").change(function () { RefreshVehiculos(1, 20) });
+
+        // Muestro los vehiculos de la Descripción
+        $("#SearchText").keyup(function (e) {
+            var keyCode = e.keyCode || e.which;
+            if ((keyCode == 13) || (keyCode == 9)) {
+                RefreshVehiculos(1, 20)
+            }
+        });
+
+        // Muestro los vehiculos del modelo (año)
+        $("#Modelo").keyup(function (e) {
+            var keyCode = e.keyCode || e.which;
+            if ((keyCode == 13) || (keyCode == 9)) {
+                RefreshVehiculos(1, 20)
+            }
+        });
+
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+    });
+</script>

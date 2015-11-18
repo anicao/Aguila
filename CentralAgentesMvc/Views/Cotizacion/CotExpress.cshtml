@@ -1,0 +1,982 @@
+﻿
+@model CentralAgentesMvc.Models.CotizaExpressModel
+
+@{
+    var session = (System.Data.DataSet)Session["UserObj"];
+    if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+    {
+        Layout = "~/Views/Shared/_ExpressLayout.cshtml";
+    }
+
+    ViewBag.Title = "Cotizador en Línea";
+    
+}
+
+<div class="panelContent">
+    <div class="row clearfix">
+        @using (Html.BeginForm("ResultadoCotizacion", "Cotizacion", FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "formaExp" }))
+        { 
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            
+            <!-- Datos Generales / Datos del Vehículo -->
+            <div id="dvLeft" class="col-md-4 column" style="padding-left: 9px; padding-right: 9px;">
+                <div class="well well-md col-md-12">
+                    <div id="panelTop">
+                    </div>
+                    <br />
+                    <div id="panelBottom">
+                    </div>
+                </div>
+            </div>
+            
+            @Html.HiddenFor(m => m.cotizacion.cVendida, new { value = Model.cotizacion.cVendida })
+            @Html.HiddenFor(m => m.cotizacion.titulo, new { value = Model.cotizacion.cVendida })
+            @Html.HiddenFor(m => m.vehiculo.nNumVehi, new { value = Model.vehiculo.nNumVehi })
+            @Html.HiddenFor(m => m.vehiculo.titulo, new { value = Model.vehiculo.titulo })
+            @Html.HiddenFor(m => m.vehiculo.apellidoPaterno, new { value = Model.vehiculo.apellidoPaterno })
+            @Html.HiddenFor(m => m.vehiculo.apellidoMaterno, new { value = Model.vehiculo.apellidoMaterno })
+            @Html.HiddenFor(m => m.vehiculo.nombres, new { value = Model.vehiculo.nombres })
+            @Html.HiddenFor(m => m.vehiculo.codigoPostal, new { value = Model.vehiculo.codigoPostal })
+            @Html.HiddenFor(m => m.cotizacion.numConductores, new { value = Model.cotizacion.numConductores })
+            @Html.HiddenFor(m => m.cotizacion.numVehiculos, new { value = Model.cotizacion.numVehiculos })
+            @Html.HiddenFor(m => m.conductor.nombre, new { value = Model.conductor.nombre })
+            @Html.HiddenFor(m => m.vehiculo.numConductores, new { value = Model.vehiculo.numConductores })
+            @Html.HiddenFor(m => m.vehiculo.numVehiculos, new { value = Model.vehiculo.numVehiculos })
+            @Html.HiddenFor(m => m.vehiculo.modelo, new { value = Model.vehiculo.modelo })
+            @Html.HiddenFor(m => m.vehiculo.valorAuto, new { value = Model.vehiculo.valorAuto })
+            @Html.HiddenFor(m => m.vehiculo.tpoEspecifAuto, new { value = Model.vehiculo.tpoEspecifAuto, @id="DscTipoVeh" })
+            @Html.HiddenFor(m => m.vehiculo.DescripcionTipo, new { value = Model.vehiculo.DescripcionTipo })
+            @Html.HiddenFor(m => m.OrigenCotExp, new { value = Model.OrigenCotExp })                        
+        }
+
+        <!-- Calculo / Dirección / Pago -->
+        <div class="col-md-8 column" style="padding-left: 8px; padding-right: 10px;">
+            <div id="TblRes" class="well well-md col-md-12" style="margin-bottom: 4px; padding: 0px; display: none;">
+                @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+                {
+                    <div class="well well-md blueFill col-md-12">
+                        <h5 style="text-align:left; margin: 10px 0px 10px 15px">SELECCIONE LA COBERTURA</h5>
+                    </div>
+                }
+                else
+                {
+                    <div class="well well-md blueFill col-md-12">
+                        <img class="col-md-7 express img_cabecera" alt="" src="" />
+                        <div class="col-md-5">
+                             <input id="BtnCob"
+                                    type="button"
+                                    class="express img_coberturaA"
+                                    title="Seleccione Tipo de Cobertura" />
+                             <input id="BtnDir"
+                                    type="button"
+                                    class="express img_addressD"
+                                    disabled="disabled"
+                                    onclick="ShowDataInfo('Dirección de Facturación', '@Url.Action("DireccionExp", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo'});"
+                                    title="Agregue su dirección de facturación" />
+                             <input id="BtnPlacas"
+                                    type="button"
+                                    class="express img_carD"
+                                    disabled="disabled"
+                                    onclick="ShowDataInfo('Serie y Placa Vehículo'
+                                                        , '@Url.Action("SeriePlacaExp", "General")'
+                                                        , { id: $('#cotizacionID').val()
+                                                        , modulo: '@ViewBag.Modulo'
+                                                        , descVeh: $('#DscTipoVeh').val() });"
+                                    title="Complete los datos de su vehículo" />
+                             <input id="BtnFormPago"
+                                    type="button"
+                                    class="express img_payD"
+                                    disabled="disabled"
+                                    onclick="ShowDataInfo('Datos del Pago' , '@Url.Action("DesgloseExp", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });"
+                                    title="Agregue los datos de su pago" />
+                        </div>
+                    </div>
+                }
+
+                <!-- Tabla con los calculos -->
+                <div id="dvTablaCalculo">
+                    <table id="tblCober"
+                           data-height="250"
+                           data-width="300"
+                           data-striped="true"
+                           data-cache="false"
+                           data-classes="table table-hover table-bordered table-condensed miniText"
+                           data-show-refresh="false"
+                           data-show-toggle="false"
+                           data-show-columns="false"
+                           data-search="false">
+                         <thead>
+                             <tr>
+                                 <th data-field="TipoCobertura"  data-sortable="true" data-width="90" data-align="center" data-valign="middle"></th>
+                                 <th data-field="Contado"        data-sortable="true" data-width="50" data-align="left"   data-valign="middle">Contado</th>
+                                 <th data-field="Semestral"      data-sortable="true" data-width="80" data-align="left"   data-valign="middle">Semestral</th>
+                                 <th data-field="Trimestral"     data-sortable="true" data-width="80" data-align="left"   data-valign="middle">Trimestral</th>
+                                 <th data-field="Mensual"        data-sortable="true" data-width="80" data-align="left"   data-valign="middle">Mensual</th>
+                             </tr>
+                         </thead>
+                    </table>
+                </div>
+
+                <!-- Frame con el detalle de la Cobertura Seleccionada -->
+                <div id="dvCoberturaPlane" style="display: none;">
+                    <div id="dvSelectedPlan">
+                        @{ Html.RenderAction("PlanSelectedExpress", "Cotizacion"); }
+                    </div>
+                    <hr style="margin-top: 4px; margin-bottom: 4px;" />
+                    <div class="col-md-12 column" style="margin-bottom: 4px; padding: 4px 0px; text-align: right;">
+                             <label class="btn-sm Rojos" style="font-style:normal;">
+                                <span class=" fa fa-phone"></span>&nbsp;&nbsp;Llamar 01 800 7093800
+                      </label>
+                            <button id="BtnSendMail" type="button" class="btn btn-sm btn-Rojos" title="Enviar cotización por email" onclick="SendMailExpress();">
+                                <span class="fa fa-envelope-o fa-md"></span>&nbsp;&nbsp;Enviar por Correo
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" title="Regresar al paso anterior" onclick="NextAndPrevious('PREVIOUS');">
+                                <span class="fa fa-angle-double-left fa-md"></span>&nbsp;&nbsp;Regresar
+                            </button>
+                            <button id = "BtnNext" type="button" class="btn btn-sm btn-primary" title="Pasar al siguiente paso" onclick="NextAndPrevious('NEXT');">
+                                Continuar&nbsp;&nbsp;<span class="fa fa-angle-double-right fa-md"></span>
+                            </button>
+                    </div>
+                </div>
+
+                <!-- Frame con el detalle de la Cobertura Seleccionada -->
+                <div id="GrdCot" class="col-sm-12" style="padding-top: 5px; padding-bottom: 5px; text-align: right; display: none;">
+                     @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+                     {
+                         <button type="button" class="btn btn-sm btn-primary" style="text-align: left" title="Guardar datos" onclick="GuardarCotExpress();">
+                             <span class="fa floppy-o fa-md"></span>&nbsp;&nbsp;Guardar Datos
+                         </button>
+                     }
+                     else
+                     {
+                          <label class="btn-sm Rojos" style="font-style:normal;">
+                                <span class=" fa fa-phone"></span>&nbsp;&nbsp;Llamar 01 800 7093800
+                      </label>        
+                         <button type="button" class="btn btn-sm btn-primary" style="text-align: left" title="Guardar datos y pasar al siguiente paso" onclick="GuardarCotExpress();">
+                             Seguir compra en línea&nbsp;&nbsp;<span class="fa fa-angle-double-right fa-md"></span>
+                         </button>
+                     }
+                </div>
+            </div>
+
+            <!-- Datos del Pago -->
+            <div id="PagoLinea" class="well well-md col-md-12" style="padding-top: 2px; padding-bottom: 4px; display: none;">
+                @{ Html.RenderAction("PagoEnLineaExpress", "Cotizacion"); }
+            </div>
+        </div>
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+        {
+       <div id="ImgPromociones" class="col-md-8 column" style="padding-left: 8px; padding-right: 10px; display: none;" >
+       <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox" >
+            <div class="item active">
+                <img src="~/Content/images/BANNER-MEJOR-PRECIO.png" alt="Welcome"  />
+            </div>
+            <div class="item">
+                <img src="~/Content/images/BANNER-DESCUENTO.png" alt="Informativo" />
+            </div>
+        </div>
+        </div>   
+        </div>
+        }
+       
+    </div>
+     <!-- Datos del vehiculo -->
+    <div id="dvDatosVehiculo" style="padding: 5px; margin: -10px">
+        <h5 style="text-align:left; margin-top: 2px; margin-bottom: 4px;">Datos del Vehículo</h5>
+        <hr style="margin-top: 4px; margin-bottom: 4px;" />
+
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Sub Ramo:</strong></span>
+            <div class="form-validator">
+                @Html.DropDownListFor(m => m.vehiculo.subRamo, new SelectList(Model.arrSubRamo, "Key", "Value", "R"), new { @class = "form-control input-sm", @id = "ddlSubRamoA", @style = "width: 120px;" })
+            </div>
+            <span class="input-group-addon left-data"  style="border: none; background: transparent; width: 100px; text-align: right;"><strong>Año:</strong></span>
+            <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px">
+                <div id="año" class="form-validator">
+                    @Html.DropDownListFor(m => m.vehiculo.año, new SelectList(Model.ArrAños, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlAniosA", @style = "width: 100px;" })
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Marca:</strong></span>
+            <div id="marca_" class="form-validator">
+                @Html.DropDownListFor(m => m.marca_, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlMarcaA" })
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>SubMarca:</strong></span>
+            <div id="Sbmarca_" class="form-validator">
+                @Html.DropDownListFor(m => m.Sbmarca_, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlSubMarcaA" })
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Tipo:</strong></span>
+            <div id="tipoVeh" class="form-validator">
+                @Html.DropDownListFor(m => m.tipoVeh, new SelectList(string.Empty, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddlTipoA" })
+            </div>
+        </div>
+
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+        {
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Ingrese Código de la Imagen:</strong></span>
+                <div class="form-validator">
+                    <div style="float: left;">
+                        <img id="CaptchaImg" src="@Url.Action("ShowCaptchaImage", "Cotizacion", new { random = Guid.NewGuid().ToString() })" alt="" />&nbsp;&nbsp;
+                    </div>
+                    <div style="float: left;">
+                        <img alt="" src="" class="invoice img_refresh" id="refresh" onclick="RecargaCaptcha('@Url.Action("ShowCaptchaImage", "Cotizacion")');" />
+                    </div>
+                    @Html.TextBoxFor(m => m.CaptchaText, new { @class = "form-control input-sm uppercase" })
+                </div>
+                
+             @Html.HiddenFor(m => m.cotizacion.codigoNegro, new { @class = "form-control input-sm" })
+            </div>
+            <strong>@ViewBag.Message </strong>
+            
+            <div id="SeccCliente" class="col-xs-12 input-group" style="text-align: right; display: none;">
+                <button type="button" class="btn btn-sm btn-primary" style="text-align: left;" title="Cotizar datos" onclick="LoadCalculo();" onload="Iniciar()">
+                    <span class="fa fa-tasks fa-md"></span>&nbsp;&nbsp;Cotizar
+                </button>                          
+            </div>
+        }
+    </div>
+
+     <!-- Datos generales -->
+    <div id="dvDatosGenerales" style="padding: 5px; margin: -10px">
+    <div id="dvCotizaNumber" style="float: right; display: none;">
+                @Html.Label("Cotización No:", new { @class = "control-label-sm text-right", @id = "idCoti" })
+            </div>
+        <h5 style="text-align:left; margin-top: 2px; margin-bottom: 4px;">Datos Generales </h5>
+
+        <hr style="margin-top: 4px; margin-bottom: 4px;" />
+
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Nombre(s):</strong></span>
+            <div class="form-validator">
+                @Html.TextBoxFor(m => m.cotizacion.nombres, new { @class = "form-control input-sm uppercase", @id = "NombreA" })
+                @Html.ValidationMessageFor(m => m.cotizacion.nombres)
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Apellido Paterno:</strong></span>
+            <div class="form-validator">
+                @Html.TextBoxFor(m => m.cotizacion.apellidoPaterno, new { @class = "form-control input-sm uppercase", @id = "Apellido1" })
+                @Html.ValidationMessageFor(m => m.cotizacion.apellidoPaterno)
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data"><strong>Apellido Materno:</strong></span>
+            <div class="form-validator">
+                @Html.TextBoxFor(m => m.cotizacion.apellidoMaterno, new { @class = "form-control input-sm uppercase", @id = "Apellido2" })
+                @Html.ValidationMessageFor(m => m.cotizacion.apellidoMaterno)
+            </div>
+        </div>
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+        {
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Correo Electrónico:</strong></span>
+                @Html.TextBoxFor(m => m.cotizacion.email, new { @class = "form-control input-sm", @id = "txtMailExI", @name = "txtMailExM" })
+                @Html.ValidationMessageFor(m => m.cotizacion.email)
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data"><strong>Teléfono:</strong></span>
+                @Html.TextBoxFor(m => m.Telefonos.cTel, new { @class = "form-control input-sm", @id = "txtPhone" })
+                @Html.ValidationMessageFor(m => m.Telefonos.cTel)
+            </div>
+        }
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Fecha de Nacimiento (edad):</span>
+            <div class="form-validator col-sm-4" style="padding-left: 1px; padding-right: 1px">
+                @Html.TextBoxFor(m => m.edad, new { @class = "form-control input-sm", @Id = "TxtEdad" })
+                @Html.ValidationMessageFor(m => m.edad)
+            </div>
+            <div id="dvFechaNac" class="form-validator col-sm-8" style="padding-left: 1px; padding-right: 1px">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.conductor.fechaNacimiento, new { @class = "form-control input-sm", @maxlength = "10", @placeholder = "Fecha Nacimiento", @id = "TxtFchNac" })
+                    @Html.ValidationMessageFor(m => m.conductor.fechaNacimiento)
+                    <span class="btn btn-default input-sm input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Sexo y Estado Civil:</span>
+            <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px">
+                @Html.CheckBoxFor(m => m.EsHombre, new { @class = "form-control checkbox-sm", @id = "ElSexo" })
+            </div>
+            <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px">
+                @Html.DropDownListFor(m => m.conductor.estadoCivil, new SelectList(Model.EdoCivil.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlEdoCivilA" })
+            </div>
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Código Postal:</span>
+            <div class="form-validator">
+                @Html.TextBoxFor(m => m.cotizacion.codigoPostal, new { @class = "form-control input-sm", @maxlength = "5", @Id = "TxtCp" })
+                @Html.ValidationMessageFor(m => m.cotizacion.codigoPostal)
+            </div>
+        </div>
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+        {
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Conductor de bajo riesgo:</span>
+                @Html.DropDownListFor(m => m.cotizacion.conductorRestringido, new SelectList(Model.RiesgoConductorSourceEx, "Key", "Value", 1),
+                                                                              new { @class = "form-control input-sm", @placeholder = "conductor bajo riesgo", @style = "width: 120px;" })
+
+                <span class="input-group-addon left-data" style="border: none; background: transparent; width: 150px; text-align: right;">Uso Trabajo:</span>
+                <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px;width: 70px;">
+                   @Html.CheckBoxFor(m => m.vehiculo.UsaParaTrabajo, new { @class = "form-control checkbox-sm", @id = "UsaParaTrabajo" })
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Asistencia en Viaje:</span>
+                @Html.DropDownListFor(m => m.vehiculo.asistenciaViaje, new SelectList(Model.AsisteViaje.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlAsisViajeA", })
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Cobertura Gastos Médicos:</span>
+                @Html.DropDownListFor(m => m.vehiculo.coberGtoMed, new SelectList(Model.GM.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlGMA" })
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Cobertura Responsab. Civil:</span>
+                @Html.DropDownListFor(m => m.vehiculo.coberRepCiv, new SelectList(Model.RC.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlRCA" })
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Cobertura RC Catastrófica:</span>
+                @Html.DropDownListFor(m => m.vehiculo.coberRepCivCat, new SelectList(Model.RCCat.Items, "Value", "Text", 3000000), new { @class = "form-control input-sm", @id = "ddRCCatA" })
+            </div>            
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Asesoría y Defensa Legal:</span>
+                @Html.DropDownListFor(m => m.vehiculo.proliber, new SelectList(Model.Proliber.Items, "Value", "Text", "S")
+                                                               , new { @class = "form-control input-sm", @id = "ddlProlibeA", @style = "width: 120px;" })
+
+                <span class="input-group-addon left-data" style="border: none; background: transparent; width: 150px; text-align: right;">TERSA:</span>
+                <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px;width: 70px;">
+                    @Html.CheckBoxFor(m => m.AplicaTERSSA, new { @class = "form-control checkbox-sm" })
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Suma Asegurada Fija:</span>
+                @Html.DropDownListFor(m => m.vehiculo.sumAsegFija, new SelectList(Model.SAF.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlSAFA", @style = "width: 120px;" })
+
+                <span class="input-group-addon left-data"  style="border: none; background: transparent; width: 150px; text-align: right;">Procar:</span>
+                <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px">
+                    @Html.DropDownListFor(m => m.cotizacion.control, new SelectList(Model.Procar, "Key", "Value"), new { @class = "form-control input-sm", @id = "ddcontrolA", @style = "width: 70px;" })
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Vehículo sustituto:</span>
+                @Html.DropDownListFor(m => m.vehiculo.vehSus, new SelectList(Model.VehSus.Items, "Value", "Text"), new { @class = "form-control input-sm", @id = "ddlVehSusA", @style = "width: 120px;" })
+
+                <span class="input-group-addon left-data"  style="border: none; background: transparent; width: 150px; text-align: right;">Ex. Deducible:</span>
+                <div class="col-sm-6" style="padding-left: 1px; padding-right: 1px">
+                    @Html.DropDownListFor(m => m.vehiculo.ExcenDedu, new SelectList(Model.ExDeduc.Items, "Value", "Text"),
+                                                                  new { @class = "form-control input-sm", @id = "ddlExenDeduA", @style = "width: 70px;" })
+                </div>
+            </div>
+            <div class="col-xs-12 input-group input-group-sm">
+                @Html.HiddenFor(m => m.cotizacion.campaña, new { @class = "form-control  input-sm ", @id = "ddCampaniaA" })
+                @Html.HiddenFor(m => m.CaptchaText, new { value = Model.CaptchaText })
+            </div>
+            
+            <div class="col-xs-12 input-group" style="text-align: right;">
+                <button type="button" class="btn btn-sm btn-primary" style="text-align: left;" title="Cotizar datos" onclick="LoadCalculo();">
+                    <span class="fa fa-tasks fa-md"></span>&nbsp;&nbsp;Cotizar
+                </button>
+            </div>
+        }
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+        {
+        <script type='text/javascript' data-cfasync='false'>
+             (function () {
+                 var done = false;
+                 var script = document.createElement('script');
+                 script.async = true; script.type = 'text/javascript';
+                 script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript';
+                 document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) {
+                     if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
+                         var w = new PCWidget({
+                             c: '819560b4-b744-4ad8-b290-52667aee76b2', f: true
+                         });
+                         done = true;
+                     }
+                 };
+             })();
+   </script>
+        }
+        @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+        {
+        <script type='text/javascript' data-cfasync='false'>
+            $(document).ready(function () {
+                $("#footer").hide();
+            });
+   </script>
+        }
+    </div>
+
+    <!-- Animated Arrow -->
+    <div id = "ArrowUp" class="img_arrowGif" style="display: none;"></div>
+
+    <input type="hidden" id="hdTipoCotizacion" value="" />
+    <input type="hidden" id="hdSteps"          value="0" />
+    <input type="hidden" id="hdCtzID"          value="" />
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var guardado = false;
+        var dvCar = $("#dvDatosVehiculo");
+        var dvDTG = $("#dvDatosGenerales");
+
+        // Ubico los paneles en función del usuario logueado
+        if ('@session.Tables[0].Rows[0]["cNombre"].ToString().Trim()' == "COTIZADOR EN LINEA") {
+            $("#panelTop").html(dvDTG);
+            $("#panelBottom").html(dvCar);
+            $("#hdTipoCotizacion").val("EXPRESS")
+        }
+        else {
+            $(".panelContent").css("margin-top", "4%");
+            $(".panelContent").css("margin-left", "10px");
+            $("#panelTop").html(dvCar);
+            $("#panelBottom").html(dvDTG);
+            $("#hdTipoCotizacion").val("NORMAL")
+        }
+
+        // Condicionando textbox a solo letras
+        SoloLetras('Apellido1');
+        SoloLetras('Apellido2');
+        SoloLetras('NombreA');
+
+        // Seteo los controles
+        ValidaNumero('TxtEdad');
+        ValidaNumero('TxtCp');
+        ValidaNumero('txtPhone');
+
+        ConfigExpressControls('dvFechaNac', 'TxtEdad', 'TxtFchNac');
+        $('input[type="text"]').click(function () { $(this).select(); });
+        $('#ElSexo').bootstrapSwitch({ onText: "Masculino", offText: "Femenino" });
+        $('#AplicaTERSSA').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#UsaParaTrabajo').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#tblCober').bootstrapTable();
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () { this.value = this.value.toUpperCase(); });
+
+        // Sección del Cliente
+        if (document.getElementById("SeccCliente")) {
+            $("#SeccCliente").show();
+            tooltips = function (key, descr, titulo, posision) {
+                $("#" + key + "").qtip({
+                    content: { text: descr, title: titulo },
+                    show: { ready: false },
+                    overwrite: false,
+                    style: { classes: 'qtip-bootstrap qtip-light qtip-shadow qtip-rounded' },
+                    position: {
+                        my: 'top center',  // Position my top left...
+                        at: 'bottom center', // at the bottom right of...
+                    }
+                });
+            }
+        }
+
+        // Dispara el change del SubRamo
+        $("#ddlSubRamoA").change(function () {
+            $("#ddlAniosA").empty();
+            $("#ddlMarcaA").empty();
+            $("#ddlSubMarcaA").empty();
+            $("#ddlTipoA").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenAños")', // we are calling json method
+                dataType: 'json',
+                data: { SubRamo: $("#ddlSubRamoA").val() },
+                // here we are get value of selected country and passing same value
+                //as inputto json method GetStates.
+                success: function (ArrAños) {
+                    // states contains the JSON formatted list
+                    // of states passed from the controller
+                    var items = '<option>Año(Modelo)</option>';
+                    $.each(ArrAños, function (i, ArrAños) {
+                        items += '<option value="' + ArrAños + '">' + ArrAños + '</option>';
+                        // here we are adding option for States
+                    });
+                    $('#ddlAniosA').html(items);
+                },
+                error: function (ex) {
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+        // Dispara el change de Años
+        $("#ddlAniosA").change(function () {
+            $("#ddlMarcaA").empty();
+            $("#ddlSubMarcaA").empty();
+            $("#ddlTipoA").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenMarcaVehi")', // we are calling json method
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val(), straño: $("#ddlAniosA").val() },
+                // here we are get value of selected country and passing same value
+                //as inputto json method GetStates.
+                success: function (Marcas) {
+                    // states contains the JSON formatted list
+                    // of states passed from the controller
+                    if (Marcas.length > 1) {
+                        var items = '<option>Seleccionar Marca</option>';
+                        $.each(Marcas, function (i, Marcas) {
+                            items += '<option value="' + Marcas.Value + '">' + Marcas.Text + '</option>';
+                            // here we are adding option for States
+                        });
+                        $('#ddlMarcaA').html(items);
+                    }
+                },
+                error: function (ex) {
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+        // Dispara el change de Marcas
+        $("#ddlMarcaA").change(function () {
+            $("#ddlSubMarcaA").empty();
+            $("#ddlTipoA").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenSubMarcaVehi")', // we are calling json method
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val(), straño: $("#ddlAniosA").val(), nMarcaId: $("#ddlMarcaA").val() },
+                // here we are get value of selected country and passing same value
+                //as inputto json method GetStates.
+                success: function (subMarcas) {
+                    // states contains the JSON formatted list
+                    // of states passed from the controller
+                    if (subMarcas.length > 0) {
+                        var items = '<option>Seleccionar SubMarca</option>';
+                        $.each(subMarcas, function (i, subMarcas) {
+                            items += '<option value="' + subMarcas.Value + '">' + subMarcas.Text + '</option>';
+                            // here we are adding option for States
+                        });
+                        $('#ddlSubMarcaA').html(items);
+                    }
+                },
+                error: function (ex) {
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+        // Dispara el change del SubMArcas
+        $("#ddlSubMarcaA").change(function () {
+            $("#ddlTipoA").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ObtenTipoVehi")', // we are calling json method
+                dataType: 'json',
+                data: { subRamo: $("#ddlSubRamoA").val()
+                      , straño: $("#ddlAniosA").val()
+                      , nMarcaId: $("#ddlMarcaA").val()
+                      , SubMarca: jQuery.trim($("#ddlSubMarcaA").val())
+                      , Marca: jQuery.trim($("#ddlMarcaA" + " option:selected")[0].innerHTML)
+                },
+                // here we are get value of selected country and passing same value
+                //as inputto json method GetStates.
+                success: function (tipoVehiculo) {
+                    // states contains the JSON formatted list
+                    // of states passed from the controller
+                    if (tipoVehiculo.length > 0) {
+                        var items = '<option>Tipo</option>';
+                        $.each(tipoVehiculo, function (i, tipoVehiculo) {
+                            items += '<option value="' + tipoVehiculo.Value + '">' + tipoVehiculo.Text + '</option>';
+                            // here we are adding option for States
+                        });
+                        $('#ddlTipoA').html(items);
+                    }
+                },
+                error: function (ex) {
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+
+        // Ejecuta el calculo
+        LoadCalculo = function () {
+            $("#ImgPromociones").show();
+            $("#TblRes").hide();
+            $("#GrdCot").hide();
+
+            // Guardo el tipo especifico
+            if ($("#ddlTipoA option:selected")[0] != undefined) {
+                $('#DscTipoVeh').val($("#ddlTipoA option:selected")[0].innerHTML);
+            }
+
+            // Cambio el msje de espera
+            $.blockUI.defaults.message = '<h4><i class="fa fa-spinner fa-2x fa-pulse"></i>&nbsp;&nbsp;&nbsp;Obteniendo las 12 mejores coberturas</h4>';
+
+            var form = $('#formaExp');
+            if (form.validate(), !form.valid()) { }
+            ShowWait();
+            $.ajax({
+                type: "POST",
+                url: form.attr("action"),
+                data: form.serialize(),
+                success: function (msg) {
+                    $.unblockUI();
+                    if (msg.success == undefined) {
+                        if (document.getElementById("SeccCliente")) {
+                            $("#SeccCliente").hide();
+                            $("#GrdCot").show();
+                        }
+
+                        // Mustro el ID de la cotización
+                        $("#dvCotizaNumber").show();
+                        $("#idCoti").html(msg[0].IdCoti);
+                        $("#hdCtzID").val(msg[0].IdCoti.split(':')[1]);
+
+                        // Muestro la tabla con el calculo
+                        SetDataInTables('tblCober', msg);
+                        $("#TblRes").show();
+
+                        // Cambio el msje de espera
+                        $.blockUI.defaults.message = '<h4><i class="fa fa-spinner fa-2x fa-pulse"></i>&nbsp;&nbsp;&nbsp;Espere por favor</h4>';
+
+                        // Ejecuto el siguiente paso
+                        if ('@session.Tables[0].Rows[0]["cNombre"].ToString().Trim()' == "COTIZADOR EN LINEA") {
+                            NextAndPrevious("NEXT");
+                        }
+
+                        $("input[name$='savecoti']").click(function () {
+                            $("#GrdCot").show();
+                        });
+                    }
+                    else { OnPaintErrorsAndSuccess(msg); }
+                },
+                error: function (e) {
+                    $.unblockUI();
+                    ShowAlertWindow("Error en proceso favor de intentar de nuevo", 'Error...');
+                }
+            });
+        };
+
+        // Guardar la cotización
+        GuardarCotExpress = function () {
+            $("#GrdCot").hide();
+            radio = $('input:radio[name=savecoti]:checked').val();
+
+            // do what you like with the input
+            $input = $('<input type="text" name="radio"/>').val(radio);
+
+            // append to the form
+            $('#myForm').append($input);
+
+            // then...
+            data: $('#myForm').serialize()
+            ShowWait();
+            if ($('input:radio[name=savecoti]:checked').val() == "Clientes") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GuardaCotUsuario", "Cotizacion")',
+                    data: $("#formaExp").serialize() + "&radio=" + radio,
+                    success: function (msg) {
+                        $.unblockUI();
+                        alert(msg.idCot);
+                    },
+                    error: function (e) {
+                        $.unblockUI();
+                        ShowAlertWindow("Error en proceso favor de intentar de nuevo", 'Error...');
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GuardaCotExpress", "Cotizacion")',
+                    data: $("#formaExp").serialize() + "&radio=" + radio,
+                    success: function (msg) {
+                        $.unblockUI();
+
+                        // Ejecuto el siguiente paso
+                        if ('@session.Tables[0].Rows[0]["cNombre"].ToString().Trim()' == "COTIZADOR EN LINEA") {
+                            //NextAndPrevious("NEXT");
+                            Paso2();
+                        }
+
+                        if (document.getElementById("SeccCliente")) {
+                            //alert("la cotizacion " + msg + " ha sido enviada su corre electronico");
+                            //window.location.replace("https://elaguila.com.mx");
+                            //ShowDataInfo('Dirección de Facturación', '@Url.Action("DireccionExp", "General")', { id: $('#cotizacionID').val(), modulo: '@ViewBag.Modulo' });
+                        } else {
+                            ShowDataInfo('Datos Generales de la Cotización', '@Url.Action("DetalleGeneral", "General")', { id: msg, modulo: 'Cotizaciones' });
+                        }
+                    },
+                    error: function (e) {
+                        $.unblockUI();
+                        ShowAlertWindow("Error en proceso favor de intentar de nuevo", 'Error...');
+                    }
+                });
+            }
+        };
+
+        // Funión para enviar por correo la cotización
+        SendMailExpress = function () {        
+            ShowWait();
+            $.get('@Url.Action("SendMailExpress", "Cotizacion")', { cotizaID: $("#hdCtzID").val() }, function (result) {
+                var msje = "Problemas enviando la cotización por correo";
+                if (result == "OK") {
+                                $.unblockUI();
+                    msje = "Cotización enviada satisfactoriamente";
+                }
+                                $.unblockUI();
+                $.growl.notice({ title: "Cotizaciones"
+                               , message: '<div id="alerts"><img class="img-sucess">' + msje + '</div>'
+                               , duration: 30000
+                               , size: "large"
+                });
+
+            });
+            dialog.close();
+        }
+        //paso 2 de wizard de proceso de cotizacion express
+        Paso2 = function () {
+            $("#ImgPromociones").hide();
+            $("#dvTablaCalculo").hide();
+            $("#BtnSendMail").show();
+            $("#dvCoberturaPlane").show();
+            $("#hdSteps").val(1);
+            // Recupero lo seleccionado en el calculo
+            $.get('@Url.Action("PlanSelectedExpress", "Cotizacion")', function (result) {
+                $("#dvSelectedPlan").html(result);
+            });
+            
+            // Muestro el frame de pago
+            $("#PagoLinea").show();
+
+            // Refresco los datos del pago en linea (direccion y pago)
+            $.get('@Url.Action("PagoEnLineaExpress", "Cotizacion")', function (result) {
+                $("#PagoLinea").html(result);
+            });
+
+            // Habilito el paso de dirección fiscal
+            $("#BtnDir").prop('disabled', false);
+            $("#BtnDir").addClass("img_addressA").removeClass("img_addressD");
+
+            // Deshabilito el paso de placas
+            $("#BtnPlacas").prop('disabled', true);
+            $("#BtnPlacas").addClass("img_carD").removeClass("img_carA");
+
+            // Dehsabilito los botones de edicion
+            $("#BtnEditCar").prop('disabled', true);
+            $("#BtnEditCar").addClass("img_penD").removeClass("img_penA");
+
+            // Ubico la flecha en el 2do boton
+            bottomY = parseInt($('#BtnDir').offset().top) + 60;
+            bottomX = parseInt($('#BtnDir').offset().left) + 10;
+            $floatingArrow.css({
+                left: bottomX,
+                top: bottomY
+            });
+        }
+
+        // Funcion para controlar avance y retroceso
+        NextAndPrevious = function (action) {
+            //this is the floating content
+            var $floatingArrow = $('#ArrowUp');
+            var bottomY = 0;
+            var bottomX = 0;
+            $floatingArrow.show();
+
+            // Obtengo el paso en que estoy
+            var step = parseInt($("#hdSteps").val()) + (action == "NEXT" ? 1 : -1);
+            
+            switch (step) {
+                case 0:
+                    // Ubico la flecha en el 1er boton
+                    bottomY = parseInt($('#BtnCob').offset().top) + 60;
+                    bottomX = parseInt($('#BtnCob').offset().left) + 10;
+                    $floatingArrow.css({
+                        left: bottomX,
+                        top: bottomY
+                    });
+
+                    // Oculto el grid y coloco el control text
+                    $("#dvTablaCalculo").show();
+                    $("#GrdCot").show();
+                    $("#dvCoberturaPlane").hide();
+
+                    // Muestro el frame de pago
+                    $("#PagoLinea").hide();
+                    $("#BtnDir").prop('disabled', true);
+                    $("#BtnDir").addClass("img_addressD").removeClass("img_addressA");
+
+                    $("#BtnEditDir").prop('disabled', true);
+                    $("#BtnEditDir").addClass("img_penD").removeClass("img_penA");
+                    break;
+
+                case 1:
+                    // Oculto el grid y coloco el control text
+                    $("#dvTablaCalculo").show();
+                    $("#GrdCot").show();
+                    $("#dvCoberturaPlane").hide();
+
+                    // Muestro el frame de pago
+                    $("#PagoLinea").hide();
+                    $("#BtnDir").prop('disabled', true);
+                    $("#BtnDir").addClass("img_addressD").removeClass("img_addressA");
+
+                    $("#BtnEditDir").prop('disabled', true);
+                    $("#BtnEditDir").addClass("img_penD").removeClass("img_penA");
+
+                    // Ubico la flecha en el 1er boton
+                    bottomY = parseInt($('#BtnCob').offset().top) + 60;
+                    bottomX = parseInt($('#BtnCob').offset().left) + 10;
+                    $floatingArrow.css({
+                        left: bottomX,
+                        top: bottomY
+                    });
+                    break;
+
+                case 2:
+                    // Oculto el grid y coloco el control text
+                    //                    $("#dvTablaCalculo").hide();
+                    //                    $("#BtnSendMail").show();
+                    //                    $("#dvCoberturaPlane").show();
+
+                     //Recupero lo seleccionado en el calculo
+                                        $.get('@Url.Action("PlanSelectedExpress", "Cotizacion")', function (result) {
+                                            $("#dvSelectedPlan").html(result);
+                                        });
+
+                                        // Muestro el frame de pago
+                                        $("#PagoLinea").show();
+
+                                        // Refresco los datos del pago en linea (direccion y pago)
+                                        $.get('@Url.Action("PagoEnLineaExpress", "Cotizacion")', function (result) {
+                                            $("#PagoLinea").html(result);
+                                        });
+
+                                        // Habilito el paso de dirección fiscal
+                                        $("#BtnDir").prop('disabled', false);
+                                        $("#BtnDir").addClass("img_addressA").removeClass("img_addressD");
+
+                                        // Deshabilito el paso de placas
+                                        $("#BtnPlacas").prop('disabled', true);
+                                        $("#BtnPlacas").addClass("img_carD").removeClass("img_carA");
+
+                                        // Dehsabilito los botones de edicion
+                                        $("#BtnEditCar").prop('disabled', true);
+                                        $("#BtnEditCar").addClass("img_penD").removeClass("img_penA");
+
+                                        // Ubico la flecha en el 2do boton
+                                        bottomY = parseInt($('#BtnDir').offset().top) + 60;
+                                        bottomX = parseInt($('#BtnDir').offset().left) + 10;
+                                        $floatingArrow.css({
+                                            left: bottomX,
+                                            top: bottomY
+                                        });
+                    // Levanto la ventana de dirección fiscal
+                    $('#BtnDir').click();
+                    break;
+
+                case 3:
+                    // Oculto el botón de envío por correo
+                    $("#BtnSendMail").hide();
+
+                    // Habilito el paso de placas
+                    $("#BtnPlacas").prop('disabled', false);
+                    $("#BtnPlacas").addClass("img_carA").removeClass("img_carD");
+
+                    // Deshabilito el paso de pago
+                    $("#BtnFormPago").prop('disabled', true);
+                    $("#BtnFormPago").addClass("img_payD").removeClass("img_payA");
+
+                    // Dehsabilito los botones de edición
+                    $("#BtnEditPag").prop('disabled', true);
+                    $("#BtnEditPag").addClass("img_penD").removeClass("img_penA");
+
+                    // Activo el botón de pagar
+                    $("#BtnExePay").prop('disabled', true);
+
+                    // Levanto la ventana de placas
+                    $('#BtnPlacas').click();
+
+                    // Ubico la flecha en el 3er boton
+                    bottomY = parseInt($('#BtnPlacas').offset().top) + 60;
+                    bottomX = parseInt($('#BtnPlacas').offset().left) + 10;
+                    $floatingArrow.css({
+                        left: bottomX,
+                        top: bottomY
+                    });
+
+                    // Activo el botón de siguiente
+                    $('#BtnNext').prop('disabled', false);
+                    break;
+
+                case 4:
+                    // Habilito el paso de pago y levanto la ventana
+                    $("#BtnFormPago").prop('disabled', false);
+                    $("#BtnFormPago").addClass("img_payA").removeClass("img_payD");
+                    $('#BtnFormPago').click();
+
+                    // Ubico la flecha en el 3er boton
+                    bottomY = parseInt($('#BtnFormPago').offset().top) + 60;
+                    bottomX = parseInt($('#BtnFormPago').offset().left) + 10;
+                    $floatingArrow.css({
+                        left: bottomX,
+                        top: bottomY
+                    });
+
+                    // Inactivo el botón de siguiente
+                    $('#BtnNext').prop('disabled', true);
+                    break;
+            }
+
+            // Guardo el paso ejecutado
+            $("#hdSteps").val(step);
+        }
+    $("#myCarousel").carousel({ interval: 3000 });
+
+        // Refrescar los datos del desglose
+        RefrescaPartialExpress = function () {
+            // Refresco los datos del pago en linea (direccion y pago)
+            $.get('@Url.Action("PagoEnLineaExpress", "Cotizacion")', function (result) {
+                $("#PagoLinea").html(result);
+
+                $("#BtnEditDir").prop('disabled', false);
+                $("#BtnEditDir").addClass("img_penA").removeClass("img_penD");
+
+                if ($("#PlacaCar").val() != '') {
+                    $("#BtnEditCar").prop('disabled', false);
+                    $("#BtnEditCar").addClass("img_penA").removeClass("img_penD");
+                }
+
+                if ($("#TarP").val() != '') {
+                    $("#BtnEditPag").prop('disabled', false);
+                    $("#BtnEditPag").addClass("img_penA").removeClass("img_penD");
+
+                    // Oculto la flecha
+                    $('#ArrowUp').hide();
+
+                    // Activo el botón de pagar
+                    $("#BtnExePay").prop('disabled', false);
+                }
+            });
+        };
+    });
+</script>

@@ -1,0 +1,27 @@
+﻿@model CentralAgentesMvc.Models.DireccionModel
+
+<div class="form-group" style="margin-bottom: 1px;">
+    <div class="col-sm-5" style="padding-right: 1px;">
+        <b>Calle :</b><br /> @Html.TextBoxFor(m => m.cDireccion, new { @class = "noInput",value = Model.cDireccion, @readonly = "readonly", id="DirP" })
+    </div>
+    <div class="col-sm-2" style="padding-left: 1px; padding-right: 1px;">
+        <b>No. Exterior :</b> @Html.TextBoxFor(m => m.nExterior, new { @class = "noInput", value = Model.nExterior, @readonly = "readonly", id = "ExtP" })
+    </div>
+    <div class="col-sm-2" style="padding-left: 1px; padding-right: 1px;">
+        <b>no. interior</b> @Html.TextBoxFor(m => m.nInterior, new { @class = "noInput",value = Model.nInterior, @readonly = "readonly", id = "IntP" })
+    </div>
+    <div class="col-sm-2" style="padding-left: 1px;">
+        <b>CP :</b> @Html.TextBoxFor(m => m.nCP, new { @class = "noInput", value = Model.nCP, @id = "nCPP", @readonly = "readonly" })
+    </div>
+</div>
+<div class="form-group" style="margin-bottom: 1px;">
+    <div class="col-sm-4" style="padding-right: 1px;">
+        <b>Población :</b><br /> @Html.TextBoxFor(m => m.cPoblacion, new { @class = "noInput", value = Model.cPoblacion, @readonly = "readonly", id = "cPobP" })
+    </div>
+    <div class="col-sm-5" style="padding-left: 1px; padding-right: 1px;">
+        <b>Colonia :</b><br />@Html.TextBoxFor(m => m.cColonia, new { @class = "noInput", value = Model.cColonia, @readonly = "readonly", id = "ColP" })
+    </div>
+    <div class="col-sm-3" style="padding-left: 1px;">
+        <b>Estado</b>@Html.DropDownListFor(m => m.nEstadoID, new SelectList(Model.EstadosSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm", @disabled = "disabled", id = "EdoP" })
+    </div>
+</div>

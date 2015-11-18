@@ -1,0 +1,301 @@
+﻿@{
+    var session = (System.Data.DataSet)Session["UserObj"];
+    }
+
+<div class="row">
+   <div class="col-sm-12 column">
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+         <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+               @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA"){
+               <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Paso 2. Dirección de Facturación
+                  </a>
+                  <div style="float: right;">
+                     <input id="BtnEditDir"
+                        type="button"
+                        class="invoice img_penD"
+                        disabled="disabled"
+                        title="Editar datos de facturación"
+                        onclick="$('#BtnDir').click()" />
+                  </div>
+               </h4>
+               }
+               else
+               { 
+               <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Dirección de Facturación
+                  </a>
+               </h4>
+               }            
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+               <div class="panel-body">
+                  <hr style="margin-top: 4px; margin-bottom: 4px;" />
+                  @{ Html.RenderAction("DetalleDireccionExpress", "General"); }
+               </div>
+            </div>
+         </div>
+         @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+         {
+         <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+               <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                     Paso 3. Datos Adicionales del Vehículo
+                     <div style="float: right;">
+                        <input id="BtnEditCar"
+                           type="button"
+                           class="invoice img_penD"
+                           disabled="disabled"
+                           title="Editar datos complementarios"
+                           onclick="$('#BtnPlacas').click()" />
+                     </div>
+                  </a>
+               </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+               <div class="panel-body">
+                  @{ Html.RenderAction("DetallePlacaExpress", "General"); }
+               </div>
+            </div>
+         </div>
+         <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+               <h5 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Paso 4. Datos del Pago
+                  </a>
+                  <div style="float: right;">
+                     <input id="BtnEditPag"
+                        type="button"
+                        class="invoice img_penD"
+                        disabled="disabled"
+                        title="Editar datos del pago"
+                        onclick="$('#BtnFormPago').click()" />
+                  </div>
+               </h5>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+               <div class="panel-body">
+                  @{ Html.RenderAction("DetallePagoExpress", "General"); }
+               </div>
+            </div>
+         </div>
+         }
+         else {
+         <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+               <h5 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                   Datos del Pago
+                  </a>
+                  <div style="float: right;">
+                     
+                  </div>
+               </h5>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+               <div class="panel-body">
+                  @{ Html.RenderAction("DetallePagoExpress", "General"); }
+               </div>
+            </div>
+         </div>
+            
+         }
+      </div>
+      <div class="col-sm-12 column" style="padding-top: 5px;">
+         <div class="col-sm-6 text-left">
+            
+         </div>
+         @if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+         {
+         <div class="col-sm-6 text-right">
+          <button id="viewResume" type="button" class="btn btn-sm btn-default" title="Pagar" onclick="prePago(1);">
+            &nbsp;&nbsp;Ver resumen
+            </button>
+            <button id="BtnExePay" type="button" class="btn btn-sm btn-primary" disabled="disabled" title="Pagar" onclick="prePago(0);">
+            <span class="fa fa-money fa-md"></span>&nbsp;&nbsp;Pagar
+            </button>
+            
+         </div>
+         }
+      </div>
+   </div>
+</div>
+
+<div id="fieldModal"></div>
+<script type="text/javascript">
+    var appDetails = {
+        fnResumenCompra: function (s) {
+            var cotiza = {
+                tipoPoliza: $("#Nombre").val(),
+                descripcionPoliza: $("#Descripcion").val(),
+                roboTotal: $("#RT").val(),
+                rcCatastrofica: $("#RCcatastrofica").val(),
+                daniosMateriales: $("#DM").val(),
+                responCivil: $("#RC").val(),
+                gastosMedicos: $("#GM").val(),
+                calle: $("#DirP").val(),
+                noExterior: $("#ExtP").val(),
+                noInterior: $("#IntP").val(),
+                cp: $("#nCPP").val(),
+                poblacion: $("#cPobP").val(),
+                colonia: $("#ColP").val(),
+                estado: $("#EdoP option:selected").text(),
+                placas: $("#PlacaCar").val(),
+                serie: $("#SerieCar").val(),
+                nombreTarjeta: $("#TitP").val(),
+                numeroTarjeta: $("#TarP").val(),
+                banco: $("#cBanco option:selected").text(),
+                vigenciaTarjeta: $("#VigP").val(),
+                cds: $("#CodNP").val(),
+                montoPago: $("#MtoP").val(),
+                nombre: $("#NombreA").val() + " " + $("#Apellido1").val() + " " + $("#Apellido2").val(),
+                email: $("#txtMailExI").val(),
+                telefono: $("#txtPhone").val(),
+                autoMarca: $("#ddlMarcaA option:selected").text(),
+                autoTipo: $("#ddlTipoA option:selected").text(),
+                autoAnio: $("#ddlAniosA option:selected").text(),
+                planPago: $("#tblCober tbody td").find("input:radio[name=savecoti]:checked").parent().text(),
+                tersa: $("#Terssa").val(),
+                cobertura100: $("#Cober100").val(),
+                autoPrestado: $("#Aviaje").val()
+            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("preViewPago", "Cotizacion")',
+                data: cotiza,
+                success: function (msg) {
+                    $("#fieldModal").html(" ");
+                    $("#fieldModal").html(msg);
+                    $.unblockUI();
+                    $("#resumenCompra").modal();
+                    if (s == 1) {
+                        $("#ArrowUp").hide();
+                        $("#accept").hide();
+                    } else {
+                        $("#accept").show();
+                        $("#ArrowUp").show();
+                    }
+                    $("#accept").change(function () {
+                        if ($(this).is(":checked")) {
+                            $("#ExePay").prop("disabled", false);
+                        } else {
+                            $("#ExePay").prop("disabled", true);
+                        }
+                    })
+                }
+            });
+        }
+    }
+    $(document).ready(function () {
+        prePago = function () {
+            ShowWait();
+            appDetails.fnResumenCompra();
+            
+            // Guardo los datos adicionales cargados
+            //            alert("hola");
+            
+        };
+        AceptaPago = function () {
+
+            $('#resumenCompra').modal('hide')
+            ShowWait();
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GuardarDocumento", "General")',
+                            data: { modulo: 'Cotizaciones' },
+                            success: function (msg) {
+                                if (msg.success == undefined) {
+                                    var elem = $("#VigP").val().split('/');
+                                    mes = elem[0];
+                                    año = elem[1];
+                                    var tipotarjeta = "";
+                                    if ($('#TipoVISP').is(':checked'))
+                                        tipotarjeta = "VISA";
+                                    if ($('#TipoMSTP').is(':checked'))
+                                        tipotarjeta = "MAST";
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '@Url.Action("AplicaSrPago", "General")',
+                                        data: {
+                                            importe: $("#MtoP").val().replace("$", ""),
+                                            tipoTarjeta: tipotarjeta,
+                                            Nombre: $("#TitP").val(),
+                                            noTarjeta: $("#TarP").val(),
+                                            CodigSeg: $("#CodNP").val(),
+                                            mes: mes,
+                                            anio: año
+                                        },
+                                        success: function (msg) {
+                                            $.unblockUI();
+                                            if (msg.success == undefined) {
+                                                ShowPagoWindow(msg.MensajeSrPago, "", msg.aplicado);
+                                                //                                    alert( + '¡GRACIAS POR SU PAGO! \n  \n CARGO EXITOSO: \n  \n Número de aprobación: XXXX \n \n '+
+                                                //                                  + 'El cargo aparecerá en su estado de cuenta identificado con la leyenda SRPAGO. \n \n '
+                                                //                                  + 'Le enviaremos a cuenta de correo su Póliza o puede consultarla en '
+                                                //                                  + ' https://www.elaguila.com.mx/facturas-y-polizas.aspx \n \n Póliza : XXXXXXXX \n \n Solicitud: XXXXXXX');
+                                            }
+                                            else {
+                                                OnPaintErrorsAndSuccess(msg);
+                                            }
+                                        },
+                                        error: function (e) { ShowAlertWindow(e.responseText, 'Error...'); }
+                                    });
+                                }
+                                else {
+                                    OnPaintErrorsAndSuccess(msg);
+                                }
+                            },
+                            error: function (e) { ShowAlertWindow(e.responseText, 'Error...'); }
+                        });
+        
+         }
+        PagoAgentes = function (dialog) {
+            ShowWait();
+            var elem = $("#VigP").val().split('/');
+            mes = elem[0];
+            año = elem[1];
+            var tipotarjeta = "";
+            if ($('#TipoVISP').is(':checked'))
+                tipotarjeta = "VISA";
+            if ($('#TipoMSTP').is(':checked'))
+                tipotarjeta = "MAST";
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AplicaSrPago", "General")',
+                data: {
+                    importe: $("#MtoP").val().replace("$", ""),
+                    tipoTarjeta: tipotarjeta,
+                    Nombre: $("#TitP").val(),
+                    noTarjeta: $("#TarP").val(),
+                    CodigSeg: $("#CodNP").val(),
+                    mes: mes,
+                    anio: año
+                },
+                success: function (msg) {
+                    $.unblockUI();
+                    if (msg.success == undefined) {
+                        ShowPagoWindow(msg.MensajeSrPago, "", msg.aplicado,"Home");
+                        //                                    alert( + '¡GRACIAS POR SU PAGO! \n  \n CARGO EXITOSO: \n  \n Número de aprobación: XXXX \n \n '+
+                        //                                  + 'El cargo aparecerá en su estado de cuenta identificado con la leyenda SRPAGO. \n \n '
+                        //                                  + 'Le enviaremos a cuenta de correo su Póliza o puede consultarla en '
+                        //                                  + ' https://www.elaguila.com.mx/facturas-y-polizas.aspx \n \n Póliza : XXXXXXXX \n \n Solicitud: XXXXXXX');
+                    }
+                    else {
+                        $.unblockUI();
+                        OnPaintErrorsAndSuccess(msg);
+                    }
+                },
+                error: function (e) {
+                    $.unblockUI();
+                    ShowAlertWindow(e.responseText, 'Error...');
+                }
+            });
+        }
+    });
+</script>
+

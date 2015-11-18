@@ -1,0 +1,107 @@
+﻿@model CentralAgentesMvc.Models.CoberturasModel
+
+<div class="col-md-12 column">
+    <div class="col-xs-12 input-group input-group-sm" style="padding: 2px 2px 1px 2px; ">
+        <h5><strong>@Html.TextBoxFor(m => m.Nombre, new { @class = "form-control readOnlyWhite text-center uppercase", @readonly = "readonly" })</strong></h5>
+    </div>
+    <div class="col-xs-12 input-group input-group-sm" style="padding: 1px 2px 2px 2px;">
+        @Html.HiddenFor(m => m.DetalleCobertura, new { @class = "form-control readOnlyWhite text-center uppercase", @readonly = "readonly" })
+    </div>
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Descripción:</span>
+            @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Daños Materiales:</span>
+            @Html.TextBoxFor(m => m.DM, String.Format("{0}%", Model.DM), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Robo Total:</span>
+            @Html.TextBoxFor(m => m.RT, String.Format("{0}%", Model.RT), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Responsab. Civil:</span>
+            @Html.TextBoxFor(m => m.RC, String.Format("{0:C2}", Model.RC), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">RC Catastrófica:</span>
+            @Html.TextBoxFor(m => m.RCcatastrofica, String.Format("{0:C2}", Model.RCcatastrofica), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Gastos Médicos:</span>
+            @Html.TextBoxFor(m => m.GM, String.Format("{0:C2}", Model.GM), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.Terssa) || !string.IsNullOrEmpty(Model.Cober100) || !string.IsNullOrEmpty(Model.Aviaje))
+    {
+    if (Model.Terssa.Equals("S"))
+    {
+        <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Terssa :</span>
+            @Html.TextBoxFor(m => m.Terssa, String.Format("{0:C2}", "Si"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>  
+    }
+    else
+    {
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-xs-12 input-group input-group-sm">
+            <span class="input-group-addon left-data">Terssa :</span>
+            @Html.TextBoxFor(m => m.Terssa, String.Format("{0:C2}", "No"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+        </div>
+    </div>  
+    
+    }
+    if (Model.Cober100.Equals("S"))
+    {
+        <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Cobertura 100:</span>
+                @Html.TextBoxFor(m => m.Cober100, String.Format("{0:C2}", "Si"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+            </div>
+        </div>  
+    }
+    else
+    {
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Cobertura 100:</span>
+                @Html.TextBoxFor(m => m.Cober100, String.Format("{0:C2}", "No"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+            </div>
+        </div>  
+    }
+    if (Model.Aviaje.Equals("R"))
+    {
+         <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Auto de repuesto:</span>
+                @Html.TextBoxFor(m => m.Aviaje, String.Format("{0:C2}", "Si"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+            </div>
+        </div>  
+    }
+    else
+    {
+    <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+            <div class="col-xs-12 input-group input-group-sm">
+                <span class="input-group-addon left-data">Auto de repuesto:</span>
+                @Html.TextBoxFor(m => m.Aviaje, String.Format("{0:C2}", "0 km"), new { @class = "form-control readOnlyWhite text-right", @readonly = "readonly" })
+            </div>
+        </div>  
+    }
+    }
+
+     
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Nombre").mouseover(function () {
+            tooltips('Nombre', $("#DetalleCobertura").val(), $("#Nombre").val());
+        });
+    });
+</script>

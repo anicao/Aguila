@@ -1,0 +1,29 @@
+﻿<div class="container" style="width: 98%;">
+    <div class="row">
+        <div class="col-sm-4 column">
+            <p class="pull-left text-center">
+                Copyright © 2014. El Aguila, Compañia de Seguros, S.A. DE C.V.
+                <br />
+                1er Piso Colonia Tlacoquemécatl C.P. 03200
+            </p>
+        </div>
+
+        <p class="col-sm-4 column text-center" style="margin-top: 15px;">
+            @{
+                if (TempData.Peek("Periodo") != null)
+                {
+                    <strong>@TempData.Peek("Periodo").ToString()</strong>
+                }
+            }
+        </p>
+
+        <div class="col-sm-4 column" style="padding-right: 0px;">
+            <div class="pull-right">
+                <ul class="social">
+                    <li> <a href="https://www.facebook.com/Elaguilaseguros"><i class="fa fa-facebook"></i></a></li>
+                    <li> <a href="https://twitter.com/elaguilaseguros"><i class="fa fa-twitter"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

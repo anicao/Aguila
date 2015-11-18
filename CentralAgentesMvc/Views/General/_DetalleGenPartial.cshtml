@@ -1,0 +1,180 @@
+﻿@model CentralAgentesMvc.Models.GenericoViewModel
+
+<div>
+    <div class="col-xs-12 input-group input-group-sm">
+        @{
+            if (Model.ModulodeTrabajo == "Cotizaciones")
+            {
+                <span class="input-group-addon left-data"><strong>Cotización No:</strong></span>
+                @Html.TextBoxFor(m => m.cotizacionID, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+            }
+            else
+            {
+                <span class="input-group-addon left-data"><strong>Póliza No:</strong></span>
+                @Html.TextBoxFor(m => m.poliza, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })                
+            }
+        }
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Oficina:</strong></span>
+        @Html.TextBoxFor(m => m.OficinaInfo.Descripcion, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Apellido Paterno:</strong></span>
+        @Html.TextBoxFor(m => m.apellidoPaterno, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly", @id="FatherName" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Apellido Materno:</strong></span>
+        @Html.TextBoxFor(m => m.apellidoMaterno, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly", @id = "MotherName" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Nombre(s):</span>
+        @Html.TextBoxFor(m => m.nombres, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly", @id = "Names" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Titulo:</span>
+        @Html.TextBoxFor(m => m.titulo, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly", @id = "TitleClient" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Sexo:</span>
+        @Html.TextBoxFor(m => m.DescripcionSexo, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "SexDesc" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Nombre del Asegurado:</span>
+        @Html.TextBoxFor(m => m.nombreAsegurado, new { @class = "form-control readOnlyWhite uppercase", @readonly = "readonly", @id = "CompleteName" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Fecha de cotización:</span>
+        @Html.TextBoxFor(m => m.fechaCotizacion, String.Format("{0:dd/MM/yyyy}", Model.fechaCotizacion), new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Número de conductores:</span>
+        @Html.TextBoxFor(m => m.numConductores, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "NumConduc" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Número de vehiculos:</span>
+        @Html.TextBoxFor(m => m.numVehiculos, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "NumCars" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Conductor de bajo riesgo:</span>
+        @Html.TextBoxFor(m => m.EsConductorBajoRiesgo, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "EsRiesgoso" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Meses a cubrir:</span>
+        @Html.TextBoxFor(m => m.DescripcionCobertura, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "CoberDesc" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Forma de pago:</span>
+        @Html.TextBoxFor(m => m.FormaPagoInfo.Descripcion, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "FormaPago" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Tipo de pago:</span>
+        @Html.TextBoxFor(m => m.TipoPagoInfo.Descripcion, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "TipoPago" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">RFC:</span>
+        @Html.TextBoxFor(m => m.RFC, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ElRFC" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Agente:</span>
+        @Html.TextBoxFor(m => m.AgenteInfo.NombreLargo, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Campaña:</span>
+        @Html.TextBoxFor(m => m.CampañaInfo.Descripcion, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Email:</span>
+        @Html.TextBoxFor(m => m.email, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ElEmail" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Cliente:</span>
+        @Html.TextBoxFor(m => m.ClienteInfo.RazonSocial, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Observaciones TC:</span>
+        @Html.TextBoxFor(m => m.obsTarj, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Cuentas de Cheques:</span>
+        @Html.TextBoxFor(m => m.cuentaCheques, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Vigencia:</span>
+        @Html.TextBoxFor(m => m.dFVigChequera, String.Format("{0:dd/MM/yyyy}", Model.dFVigChequera), new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Banco:</span>
+        @Html.TextBoxFor(m => m.banco, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Nombre del Titular:</span>
+        @Html.TextBoxFor(m => m.nomTitular, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ElTitular" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Cobertura 100:</span>
+        @Html.TextBoxFor(m => m.DescripcionCobertura100, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "LaDescCob100" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">TERSA:</span>
+        @Html.TextBoxFor(m => m.DescripcionTersa, new { @class = "form-control readOnlyWhite", @readonly = "readonly" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>Procar %:</strong></span>
+        @Html.TextBoxFor(m => m.control, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @style = "background: #ffffbd", @id = "ElProcar" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data"><strong>% Cede Comisión:</strong></span>
+        @Html.TextBoxFor(m => m.nQuitarPorPrima, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @style = "background: #ffffbd", @id = "ElPorcComi" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Promoción:</span>
+        @Html.TextBoxFor(m => m.nomPromocion, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "LaPromo" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">CIE:</span>
+        @Html.TextBoxFor(m => m.CIE, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ElCIE" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Origen:</span>
+        @Html.TextBoxFor(m => m.VendidaPor, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "QuienLaVendio" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">ERA:</span>
+        @Html.TextBoxFor(m => m.TieneEra, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "LaERA" })
+    </div>
+    <br />
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Solicitud:</span>
+        @Html.TextBoxFor(m => m.solicitudID, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "LaSolic" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Financiamiento:</span>
+        @Html.TextBoxFor(m => m.TieneFinanciamiento, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "VaFinan" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Nombre:</span>
+        @Html.TextBoxFor(m => m.cNombreFinanciamiento, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "QuienFinan" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Endoso cancelación:</span>
+        @Html.TextBoxFor(m => m.TieneEndosoCancela, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ConEndoso" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Accidentes Personales:</span>
+        @Html.TextBoxFor(m => m.TieneAccidentesPersonales, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "ConARC" })
+    </div>
+    <div class="col-xs-12 input-group input-group-sm">
+        <span class="input-group-addon left-data">Referencia Sitio Web:</span>
+        @Html.TextBoxFor(m => m.nReferenciaWeb, new { @class = "form-control readOnlyWhite", @readonly = "readonly", @id = "LaRefWeb" })
+    </div>
+
+    @Html.HiddenFor(m => m.tipoPago, new { value = Model.tipoPago })
+</div>

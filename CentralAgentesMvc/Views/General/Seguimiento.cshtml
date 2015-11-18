@@ -1,0 +1,179 @@
+﻿@model Negocio.ClasesCentral.ClsSeguimientoPol
+
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateSeguimiento", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmTracking" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Fecha última llamada:", new { @class = "col-xs-3 control-label-sm", style = "text-align: left;" })
+            <div id="dvUltCall" class="col-xs-3">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.FUltLlamada, new { @class = "form-control input-sm", @maxlength = "10", @placeholder = "Última Llamada", value = Model.FUltLlamada })
+                    <span class="btn btn-default input-sm input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            @Html.Label("Número de llamadas:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-3">
+                @Html.TextBoxFor(m => m.NumLlamadas, new { @class = "form-control input-sm uppercase", @placeholder = "No. Llamadas", value = Model.NumLlamadas, @id = "NumLlamadas" })
+                @Html.ValidationMessageFor(m => m.NumLlamadas)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Fecha proxima llamada:", new { @class = "col-xs-3 control-label-sm", style = "text-align: left;" })
+            <div id="dvProxCall" class="col-xs-3">
+                <div class="input-group date">
+                    @Html.TextBoxFor(m => m.FProxLlamada, String.Format("{0:dd/MM/yyyy}", Model.FProxLlamada), new { @class = "form-control input-sm", @maxlength = "10", placeholder = "Proxima Llamada", value = Model.FProxLlamada })
+                    <span class="btn btn-default input-sm input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            @Html.Label("Hora de llamada:", new { @class = "col-xs-3 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-3">
+                @Html.TextBoxFor(m => m.Hora, new { @class = "form-control input-sm uppercase", @placeholder = "Hora", value = Model.Hora })
+                @Html.ValidationMessageFor(m => m.Hora)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Estatus de seguimiento", new { @class = "col-xs-3 control-label-sm" })
+            <div class="form-validator col-xs-9">
+                @Html.DropDownListFor(m => m.Estatus, new SelectList(ViewBag.EstatusTrackSource, "strClave", "strDescrip", 1), new { @class = "form-control input-sm" })
+            </div>
+        </div>
+              
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="fa fa-bullhorn fa-lg"></span>&nbsp;Resumen de Renovación</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Observaciones última llamada:", new { @class = "col-xs-3 control-label-sm", @id="lblObsUltCall" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextAreaFor(m => m.ObsUltLlamada, new { @rows = 3,
+                                                                      @class = "form-control input-sm uppercase",
+                                                                      @placeholder = "Observaciones",
+                                                                      value = Model.ObsUltLlamada,
+                                                                      onkeyup = "WriteLimitedText(this, 'lblObsUltCall');" })
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Observaciones Generales:", new { @class = "col-xs-3 control-label-sm", @id = "lblObsGenCall" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextAreaFor(m => m.ObsGenerales, new { @rows = 3,
+                                                                     @class = "form-control input-sm uppercase",
+                                                                     @placeholder = "Observaciones",
+                                                                     value = Model.ObsGenerales,
+                                                                     onkeyup = "WriteLimitedText(this, 'lblObsGenCall');"})
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Observaciones Facturación:", new { @class = "col-xs-3 control-label-sm", @id = "lblObsFacCall" })
+                    <div class="form-validator col-xs-9">
+                        @Html.TextAreaFor(m => m.ObsFacturacion, new { @rows = 3,
+                                                                       @class = "form-control input-sm uppercase",
+                                                                       @placeholder = "Observaciones",
+                                                                       value = Model.ObsFacturacion,
+                                                                       onkeyup = "WriteLimitedText(this, 'lblObsFacCall');" })
+                    </div>
+                </div>
+                <hr style="margin-top: 8px; margin-bottom: 8px;" />
+                <div class="form-group" style="margin-bottom: 1px;">
+                    @Html.Label("Ejecutivo responsable:", new { @class = "col-xs-3 control-label-sm" })
+                    <div class="col-xs-9">
+                        @Html.TextBoxFor(m => m.Ejecti, new { @class = "form-control input-sm uppercase readOnlyWhite", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @Html.HiddenFor(m => m.titulo, new { value = Model.titulo })
+        @Html.HiddenFor(m => m.codigoPostal, new { value = Model.codigoPostal })
+        @Html.HiddenFor(m => m.apellidoPaterno, new { value = Model.apellidoPaterno })
+        @Html.HiddenFor(m => m.apellidoMaterno, new { value = Model.apellidoMaterno })
+        @Html.HiddenFor(m => m.nombres, new { value = Model.nombres })
+        @Html.HiddenFor(m => m.campaña, new { value = Model.campaña })
+        @Html.HiddenFor(m => m.numVehiculos, new { value = Model.numVehiculos })
+        @Html.HiddenFor(m => m.numConductores, new { value = Model.numConductores })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        $('#lblObsUltCall').html('Observaciones última llamada:<br />(@Model.ObsUltLlamada.Trim().Length.ToString() de 250)')
+        $('#lblObsGenCall').html('Observaciones Generales:<br />(@Model.ObsGenerales.Trim().Length.ToString() de 250)')
+        $('#lblObsFacCall').html('Observaciones Facturación:<br />(@Model.ObsFacturacion.Trim().Length.ToString() de 250)')
+
+        $("#dvUltCall .input-group.date").datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "es",
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $("#dvProxCall .input-group.date").datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "es",
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        ValidaNumero("NumLlamadas");
+
+        WriteLimitedText = function (text, ctrlLabel) {
+            var label = '';
+            var chrUs = text.value.trim().length;
+
+            switch (ctrlLabel) {
+                case 'lblObsUltCall':
+                    label = 'Observaciones última llamada:';
+                    break;
+
+                case 'lblObsGenCall':
+                    label = 'Observaciones Generales:';
+                    break;
+
+                case 'lblObsFacCall':
+                    label = 'Observaciones Facturación:';
+                    break;
+            }
+
+            if (chrUs > 250) {
+                text.value = text.value.trim().substring(0, 250);
+                return false;
+            }
+
+            $('#' + ctrlLabel).html(label + '<br />(' + chrUs + ' de 250)')
+        }
+
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () {
+            // Uppercase-ize contents
+            this.value = this.value.toUpperCase();
+        });
+    });
+</script>

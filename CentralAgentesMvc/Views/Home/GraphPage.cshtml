@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "GraphPartial";
+}
+<div id="graphReport" class="well" style="height: 380px;">
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.get('@Url.Action("GetDataGraph", "Home")', function (result)
+        {
+            var s1 = [], s2 = [], ticks = [];
+            $(result).each(function (i, v) {
+                s1.push(v.Cotz);
+                s2.push(v.Polz);
+                ticks.push(v.Tick);
+            });
+
+            DrawGraph("graphReport", s1, s2, ticks, 'Cotizaciones', 'Pólizas');
+        });
+    });
+</script>

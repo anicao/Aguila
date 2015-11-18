@@ -1,0 +1,250 @@
+﻿@model CentralAgentesMvc.Models.ReportViewModel
+@{
+@ViewBag.Title;
+}
+<div id="panels">
+   <div class="row clearfix" style="margin-top: -20px">
+      <div class="col-md-12 column">
+         <div class="well well-md">
+            <h4 style="margin-top: 0px; margin-bottom: 0px;">@ViewBag.Title</h4>
+            <hr />
+            <div id="custom-toolbar">
+               <div class="form-inline" role="form">
+                  <div class="form-group">
+                     @Html.LabelFor(m => m.PeriodoID, new { @class = "col-md-3 control-label" })
+                     <div class="col-md-4">
+                        @Html.DropDownListFor(m => m.MesPeriodoID, new SelectList(Model.PeriodosMesSource, "IdMes", "strMes"), new { @class = "form-control input-sm", id = "ddlPeriodoMes" })
+                     </div>
+                     <div class="col-md-5">
+                        @Html.DropDownListFor(m => m.PeriodoID, new SelectList(Model.PeriodosSource, 1), new { @class = "form-control input-sm", id = "ddlPeriodo" })
+                     </div>
+                  </div>
+                  @{
+                  if (Session["UserRol"].ToString() == "A")
+                  {
+                  <div class="form-group">
+                     @Html.LabelFor(m => m.AgenteID, new { @class = "col-md-4 control-label" })
+                     <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.AgenteID, new { @class = "form-control input-sm",
+                        @placeholder = "Agente",
+                        autocomplete = "off",
+                        value = Model.AgenteID,
+                        @style="width: 100px;"})
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <div class="col-md-12" style="padding-left: 0px">
+                        @Html.DropDownListFor(m => m.AgenteID,
+                        new SelectList(Model.AgentesSource, "lngAgente", "strNombre", 1),
+                        new { @class = "form-control input-sm", id = "ddlAgentes", @style = "width: 300px;" })
+                     </div>
+                  </div>
+                  }
+                  }
+                  <div class="form-group">
+                     <button type="button" class="btn btn-primary btn-sm btn-block" onclick="LoadData(1, 10)">Filtrar</button>
+                  </div>
+                  @{
+                  if (ViewBag.Modulo == "Cotizaciones")
+                  {
+                  <div class="form-group">
+                     <button type="button"
+                     class="btn btn-primary btn-sm btn-block"
+                     onclick="ShowDataInfo('Nueva Cotización'
+                     , '@Url.Action("CreateDocumento", "General")'
+                     , { id: 0, modulo: '@ViewBag.Modulo', isnew: true });">Nueva Cotización
+                     </button>
+                  </div>
+                  }
+                  }
+               </div>
+            </div>
+            <div class="table-responsive">
+               @{
+               if (ViewBag.Modulo == "Cotizaciones")
+               {
+               <table id="tblCotiza"
+                  data-striped="true"
+                  data-cache="false"
+                  data-classes="table table-hover table-bordered table-condensed smallText"
+                  data-show-refresh="true"
+                  data-show-toggle="true"
+                  data-show-columns="true"
+                  data-search="true"
+                  data-id-field='nCotizaID'
+                  data-side-pagination='server'
+                  data-page-list="[5, 10, 25, 50, 100]"
+                  data-pagination="true"
+                  data-toolbar="#custom-toolbar">
+                  <thead>
+                     <tr>
+                        <th data-field="chkSelect"       data-checkbox="true" data-width="35"></th>
+                        <th data-field="nCotizaID"       data-sortable="true" data-width="50"  data-align="center" data-valign="middle">Número</th>
+                        <th data-field="Cliente"         data-sortable="true" data-width="200" data-align="left"   data-valign="middle">Cliente</th>
+                        <th data-field="Telefono"        data-sortable="true" data-width="100" data-align="left"   data-valign="middle">Teléfono</th>
+                        <th data-field="Observaciones"   data-sortable="true" data-width="200" data-align="left"   data-valign="middle">Observaciones</th>
+                        <th data-field="FechaRegistro"   data-sortable="true" data-width="75"  data-align="center" data-valign="middle">Registro</th>
+                        <th data-field="InicioVigencia"  data-sortable="true" data-width="75"  data-align="center" data-valign="middle">Inicio Vigencia</th>
+                        <th data-field="SolicitudID"     data-sortable="true" data-width="80"  data-align="center" data-valign="middle">No Solicitud</th>
+                        <th data-field="FechaExpedicion" data-sortable="true" data-width="80"  data-align="center" data-valign="middle">Expedición</th>
+                        <th data-field="DescripEstatus"  data-sortable="true" data-width="130" data-align="center" data-valign="middle">Estatus</th>
+                        <th data-field="nCotizaID"
+                           data-sortable="false"
+                           data-width="40"
+                           data-align="center"
+                           data-valign="middle"
+                           data-formatter="fieldCtzFormatter"
+                           data-events="operateEvents">
+                        </th>
+                     </tr>
+                  </thead>
+               </table>
+               }
+               else
+               {
+               <table id="tblRenova"
+                  data-striped="true"
+                  data-cache="false"
+                  data-classes="table table-hover table-bordered table-condensed smallText"
+                  data-show-refresh="true"
+                  data-show-toggle="true"
+                  data-show-columns="true"
+                  data-search="true"
+                  data-id-field='nPolizaID' 
+                  data-side-pagination='server'
+                  data-page-list="[5, 10, 25, 50, 100]"
+                  data-pagination="true"
+                  data-toolbar="#custom-toolbar">
+                  <thead>
+                     <tr>
+                        <th data-field="chkSelect"      data-checkbox="true"></th>
+                        <th data-field="nPolizaID"      data-sortable="true"  data-width="100" data-align="center" data-valign="middle">Póliza</th>
+                        <th data-field="Cliente"        data-sortable="true"  data-width="300" data-align="left"   data-valign="middle">Cliente</th>
+                        <th data-field="NumConductores" data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Conductores</th>
+                        <th data-field="NumVehiculos"   data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Vehículos</th>
+                        <th data-field="ConductorRestr" data-sortable="true"  data-width="90"  data-align="center" data-valign="middle">Conduc Restr.</th>
+                        <th data-field="Ejecutivo"      data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Ejecutivo</th>
+                        <th data-field="CampainID"      data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Campaña</th>
+                        <th data-field="ClienteID"      data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Cliente</th>
+                        <th data-field="InicioVigencia" data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Inicio Vigencia</th>
+                        <th data-field="FinVigencia"    data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Fin Vigencia</th>
+                        <th data-field="Emision"        data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Expedición</th>
+                        <th data-field="DescripEstatus" data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Estatus</th>
+                        <th data-field="era" data-sortable="true"  data-width="80"  data-align="center" data-valign="middle">Era</th>
+                        <th data-field="nPolizaID"
+                           data-sortable="false"
+                           data-width="45"
+                           data-align="center"
+                           data-valign="middle"
+                           data-formatter="fieldRnvFormatter"
+                           data-events="operateEvents">
+                        </th>
+                     </tr>
+                  </thead>
+               </table>
+               }
+               }
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Deshabilitar BackSpace Tecla F5
+        $(document).keydown(function (e) {
+            if (e.keyCode == 116) return false;
+
+            var element = e.target.nodeName.toLowerCase();
+            if (element != 'input' && element != 'textarea') {
+                if (e.keyCode === 8) {
+                    return false;
+                }
+            }
+        });
+
+        // Funcion para recuperar los datos
+        LoadData = function (number, size) {
+            var agID = $("#AgenteID").val();
+            if (agID == undefined) { agID = '@Model.AgenteID'; }
+
+            var pID = $("#ddlPeriodo" + " option:selected").val();
+            var pMesID = $("#ddlPeriodoMes" + " option:selected").val();
+            var params = {
+                agenteID: agID,
+                periodoID: pID,
+                periodoMesID: pMesID,
+                offset: number,
+                limit: size
+            };
+
+            // Extraigo los datos via Json
+            if ('@ViewBag.Modulo' == "Cotizaciones")
+                GetDataTable('tblCotiza', '@Url.Action("GetCotizaciones", "Cotizacion")', params);
+            else
+                GetDataTable('tblRenova', '@Url.Action("GetRenovaciones", "Cotizacion")', params);
+        }
+
+
+        SearchData = function (e, text) {
+            var agID = $("#AgenteID").val();
+            if (agID == undefined) { agID = '@Model.AgenteID'; }
+            var params = {
+                agenteID: agID,
+                offset: 1,
+                limit: 10,
+                search: text
+            };
+
+            if (text.length > 2) {
+                if ('@ViewBag.Modulo' == "Cotizaciones")
+                    GetDataTable('tblCotiza', '@Url.Action("SearchCotizaciones", "Cotizacion")', params);
+                else
+                    GetDataTable('tblRenova', '@Url.Action("SearchRenovaciones", "Cotizacion")', params);
+            }
+        }
+
+
+        // Configuro los controles y tablas
+        ConfigSearchControls(null, null, 'AgenteID', 'ddlAgentes', null);
+        if ('@ViewBag.Modulo' == "Cotizaciones") {
+            ConfigBootstapTable('tblCotiza', LoadData, '@Url.Action("GetCotizaciones", "Cotizacion")', null, null, SearchData);
+        }
+        else {
+            ConfigBootstapTable('tblRenova', LoadData, '@Url.Action("GetRenovaciones", "Cotizacion")');
+        }
+
+        // Formateo de la columna de iconos
+        fieldCtzFormatter = function (value, row, index) {
+            return [
+               '<a class="revCot" href="javascript:void(0)" title="Revisar información"><i class="fa fa-file-text-o fa-lg" alt="Revisar información"></i></a>&nbsp;&nbsp;',
+               '<a class="delCot disabled" href="javascript:void(0)" disabled title="Eliminar cotización"><i class="fa fa-trash-o fa-lg" alt="Eliminar cotización"></i></a>',
+               ].join('');
+        };
+        fieldRnvFormatter = function (value, row, index) {
+            return [
+               '<a class="revRnv" href="javascript:void(0)" title="Revisar información"><i class="fa fa-file-text-o fa-lg" alt="Revisar información"></i></a>&nbsp;&nbsp;',
+               '<a class="delRnv disabled" href="javascript:void(0)" disabled title="Eliminar renovación"><i class="fa fa-trash-o fa-lg" alt="Eliminar renovación"></i></a>',
+               ].join('');
+        };
+
+
+        // Eventos disparados en el click de las imagenes
+        window.operateEvents = {
+            'click .delCot': function (e, value, row, index) {
+            },
+            'click .revCot': function (e, value, row, index) {
+                var title = 'Datos Generales de la Cotización';
+                ShowDataInfo(title, '@Url.Action("DetalleGeneral", "General")', { id: value, modulo: '@ViewBag.Modulo' }).then(function () {
+                });
+
+            },
+            'click .revRnv': function (e, value, row, index) {
+                ShowDataInfo('Datos Generales de la Renovación', '@Url.Action("DetalleGeneral", "General")', { id: value, modulo: '@ViewBag.Modulo' });
+            }
+        };
+
+        // Cargo los datos iniciales
+        LoadData(1, 10);
+    });
+</script>

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Aguila - Servicios en Línea</title>
+
+    <link href="@Url.Content("~/favicon.ico")" type="image/x-icon" rel="shortcut icon" />
+
+    <link href="~/Content/bootstrap/bootstrap.min.css" type="text/css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/cssExternal")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrapEx")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqplot")
+    @Scripts.Render("~/bundles/elaguila")
+</head>
+<body>
+    @RenderBody()
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script type="text/javascript">
+    // Disable caching of AJAX responses 
+    $.ajaxSetup({ cache: false });
+    $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    $.blockUI.defaults.message = '<h4><i class="fa fa-spinner fa-2x fa-pulse"></i>&nbsp;&nbsp;&nbsp;Espere por favor</h4>';
+
+    // Configuración de los switch
+    $.fn.bootstrapSwitch.defaults.size = 'mini';
+    $.fn.bootstrapSwitch.defaults.onColor = 'primary';
+    $.fn.bootstrapSwitch.defaults.offColor = 'warning';
+
+    $(window).unload(function () {
+        $.ajax({ type: "POST", url: '@Url.Action("LogOff", "Account")' });
+    });
+</script>

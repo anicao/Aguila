@@ -1,0 +1,120 @@
+﻿
+@model CentralAgentesMvc.Models.DireccionModel
+@{ var session = (System.Data.DataSet)Session["UserObj"];}
+<div class="well well-xs" style="padding: 5px; margin: -10px">
+    @using (Html.BeginForm("UpdateDireccion", "General", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "frmAddress" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Tipo:", new { @class = "col-xs-2 control-label-sm", style = "text-align: left;" })
+            <div class="form-validator col-xs-10">
+                @Html.DropDownListFor(m => m.nTipoDirID, new SelectList(Model.TipoDirSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+                @Html.ValidationMessageFor(m => m.nTipoDirID)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Calle:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-10">
+                @Html.TextBoxFor(m => m.cDireccion, new { @class = "form-control input-sm uppercase", @placeholder = "calle", value = Model.cDireccion })
+                @Html.ValidationMessageFor(m => m.cDireccion)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("No. Exterior:", new { @class = "col-xs-2 control-label-sm", style = "text-align: left;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.nExterior, new { @class = "form-control input-sm uppercase", @placeholder = "no. exterior", value = Model.nExterior })
+                @Html.ValidationMessageFor(m => m.nExterior)
+            </div>
+
+            @Html.Label("No. Interior:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.nInterior, new { @class = "form-control input-sm uppercase", @placeholder = "no. interior", value = Model.nInterior })
+                @Html.ValidationMessageFor(m => m.nInterior)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Colonia:", new { @class = "col-xs-2 control-label-sm", style = "text-align: left;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.cColonia, new { @class = "form-control input-sm uppercase", @placeholder = "colonia", value = Model.cColonia })
+                @Html.ValidationMessageFor(m => m.cColonia)
+            </div>
+
+            @Html.Label("Población:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.cPoblacion, new { @class = "form-control input-sm uppercase", @placeholder = "población", value = Model.cPoblacion })
+                @Html.ValidationMessageFor(m => m.cPoblacion)
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("Código Postal:", new { @class = "col-xs-2 control-label-sm" })
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.nCP, new { @class = "form-control input-sm", @maxlength = "5", @placeholder = "código postal", value = Model.nCP, @id = "nCP" })
+                @Html.ValidationMessageFor(m => m.nCP)
+            </div>
+
+            @Html.Label("Estado:", new { @class = "col-xs-2 control-label-sm", style = "text-align: right;" })
+            <div class="form-validator col-xs-4">
+                @Html.DropDownListFor(m => m.nEstadoID, new SelectList(Model.EstadosSource, "strCve", "strDesc", 1), new { @class = "form-control input-sm" })
+                @Html.ValidationMessageFor(m => m.nEstadoID)
+            </div>
+        </div>
+        if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() == "COTIZADOR EN LINEA")
+        {
+        <div class="form-group" style="margin-bottom: 1px;">
+            @Html.Label("RFC:", new { @class = "col-xs-2 control-label-sm"})
+            <div class="form-validator col-xs-4">
+                @Html.TextBoxFor(m => m.RFC_, new { @class = "form-control input-sm uppercase", @placeholder = "R.F.C.", value = Model.RFC_, @name = "RFC_" })                
+            </div>
+                @Html.HiddenFor(m => m.SeImprime, new { value = Model.SeImprime, @id = "IMPR" })
+                @Html.HiddenFor(m => m.EsDireccionFiscal, new { value = Model.EsDireccionFiscal, @id = "DIR" })
+                @Html.HiddenFor(m => m.cRequerida, new { value = Model.cRequerida, @id = "IMPR" })
+                @Html.HiddenFor(m => m.cFiscal, new { value = Model.cFiscal, @id = "DIR" })
+<div class="form-validator">
+</div>
+
+        </div>
+        
+        }
+        if (session.Tables[0].Rows[0]["cNombre"].ToString().Trim() != "COTIZADOR EN LINEA")
+        {
+            <div class="form-group" style="margin-bottom: 1px;">
+                @Html.Label("Imprimir:", new { @class = "col-xs-2 control-label-sm" })
+                <div class="col-xs-10">
+                    @Html.CheckBoxFor(m => m.SeImprime, new { @class = "form-control checkbox-sm" })
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 1px;">
+                @Html.Label("Dirección Fiscal:", new { @class = "col-xs-2 control-label-sm" })
+                <div class="col-xs-10">
+                    @Html.CheckBoxFor(m => m.EsDireccionFiscal, new { @class = "form-control checkbox-sm" })
+                </div>
+            </div>
+        }
+
+        @Html.HiddenFor(m => m.Consecutivo, new { value = Model.Consecutivo })
+        @Html.HiddenFor(m => m.cRequerida, new { value = Model.cRequerida })
+        @Html.HiddenFor(m => m.cFiscal, new { value = Model.cFiscal })
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#SeImprime').bootstrapSwitch({ onText: "Si", offText: "No" });
+        $('#EsDireccionFiscal').bootstrapSwitch({ onText: "Si", offText: "No" });
+        // Validación de campos numericos
+        ValidaNumero("nCP");
+        // Cambiar los text a Mayusculas cuando contengan la clase uppercase
+        $('.uppercase').focusout(function () { this.value = this.value.toUpperCase(); });
+
+        // Cambio el combo por el Código Postal
+        $('#nCP').focusout(function () {
+            $.get('@Url.Action("ValidatePostalCode", "General")', { cp: $('#nCP').val() }, function (district) {
+                $("#nEstadoID").val(district);
+            });
+        });
+
+        $('#nCP').focusout();
+    });
+    
+</script>

@@ -1,0 +1,68 @@
+﻿@model CentralAgentesMvc.Models.DesglosePagoModel
+
+<div style="padding: 5px;">
+    <div class="form-group" style="margin-bottom: 1px;">
+       
+        <div class="col-sm-12">
+         <b>Nombre del Tarjetahabiente :</b><br />
+            @Html.TextBoxFor(m => m.cTitular, new { @class = "noInput", value = Model.cTitular, @readonly = "readonly", id = "TitP" })
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 1px;">
+        
+        <div class="col-sm-4" style="padding-right: 1px;">
+        <b>Número de TC :</b><br />
+            @Html.TextBoxFor(m => m.cNoTarjeta, new { @class = "noInput", value = Model.cNoTarjeta, @readonly = "readonly", id = "TarP" })
+        </div>
+        
+        <div class="col-sm-4" style="padding-left: 1px; padding-right: 1px;">
+            <b>Banco :</b><br />
+            @Html.DropDownListFor(m => m.cBanco, new SelectList(Model.BancosSource, "strClave", "strDescrip", 1), new { @class = "noInput", @disabled = "disabled" })
+        </div>
+     
+        <div class="col-sm-2" style="padding-left: 1px; padding-right: 1px;">
+           <b>Vigencia :</b><br />
+            @Html.TextBoxFor(m => m.dfVigtarjeta, new { @class = "noInput ", value = Model.dfVigtarjeta, @readonly = "readonly", id = "VigP" })
+        </div>
+       
+        <div class="col-sm-2" style="padding-left: 1px;">
+         <b>CDS :</b><br />
+            @Html.TextBoxFor(m => m.cCodNegro, new { @class = "noInput ", @placeholder = "CDS", value = Model.cCodNegro, @readonly = "readonly", id = "CodNP" })
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 1px;">
+        <div class="col-sm-6">
+            <label class="radio-inline">
+                <input type="radio" name="TipoTC" id="TipoVISP" value="VIS" disabled="disabled" /><span class="fa fa-cc-visa fa-lg" title="Visa"></span>
+            </label>
+            <label class="radio-inline" style="margin-left: 30px;">
+                <input type="radio" name="TipoTC" id="TipoMSTP" value="MST" disabled="disabled"/><span class="fa fa-cc-mastercard fa-lg" title="MasterCard"></span>
+            </label>
+        </div>
+        
+        @Html.Label("Monto a Pagar:", new { @class = "col-xs-2 control-label-sm" })
+        <div class="col-sm-4">
+                @Html.TextBoxFor(m => m.mMonto, String.Format("{0:C2}", Model.mMonto), new
+           {
+               @class = "noInput",
+                                                                                             value = Model.mMonto,
+                                                                                             @readonly = "readonly",
+                                                                                             id = "MtoP",
+                                                                                             @style = "color: Blue; text-align: right;" })
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        SetRadioButton = function (tipoTC) {
+            if ((tipoTC.toUpperCase().indexOf("VISA") > -1) || (tipoTC.toUpperCase().indexOf("VIS") > -1))
+                $('#TipoVISP').attr('checked', 'checked');
+
+            if ((tipoTC.toUpperCase().indexOf("MASTER") > -1) || (tipoTC.toUpperCase().indexOf("MST") > -1))
+                $('#TipoMSTP').attr('checked', 'checked');
+        }
+
+        // Marco el radio button
+        SetRadioButton('@Model.cTpoTarjeta');
+    });
+</script>
